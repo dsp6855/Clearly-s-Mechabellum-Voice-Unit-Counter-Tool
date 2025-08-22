@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v1.5</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v1.6</span>
         
         <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
 
@@ -113,7 +113,7 @@
             const countersData = {
                 "Abyss": { "weakness": ["Marksman", "Mustang", "Wasp", "Melting Point"], "resistance": [] },
                 "Arclight": { "weakness": ["Stormcaller", "Steel Ball","Rhino", "Scorpion", "Vulcan", "Overlord", "Melting Point", "Fortress", "War Factory"], "resistance": ["Crawler", "Hounds", "Steel Ball", "Fang", "Mustang"] },
-                "Crawler": { "weakness": ["Arclight","Fire Badger", "Vulcan", "Arclight", "Sledgehammer", "Rhino", "Wrath"], "resistance": ["Fang", "Marksman", "Sabertooth", "Steel Ball", "Melting Point", "Hacker"] },
+                "Crawler": { "weakness": ["Arclight","Fire Badger", "Vulcan", "Sledgehammer", "Rhino", "Wrath"], "resistance": ["Fang", "Marksman", "Sabertooth", "Steel Ball", "Melting Point", "Hacker"] },
                 "Fang": { "weakness": ["Fire Badger", "Typhoon", "Mustang", "Steel Ball", "Wrath", "Rhino","Vulcan"], "resistance": ["Marksman", "Wasp", "Phoenix", "Overlord"] },
                 "Farseer": { "weakness": ["Rhino", "Melting Point", "Fortress", "War Factory"], "resistance": ["Marksman", "Hacker", "Phoenix", "Wrath"] },
                 "Fire Badger": { "weakness": ["Rhino", "Fortress", "War Factory", "Sabertooth", "Overlord"], "resistance": ["Crawler", "Fang", "Arclight", "Mustang"] },
@@ -204,6 +204,8 @@
                 'Farsiers': 'Farseer',
                 'Farsier': 'Farseer',
                 'five Sears': 'Farseer',
+                'farts here': 'Farseer',
+                'fars here': 'Farseer',
                 'fortresses': 'Fortress',
                 'hackers': 'Hacker',
                 'melting points': 'Melting Point', 
@@ -322,6 +324,20 @@
                     if (isCountered) {
                         statusText = 'Countered! ✅';
                         statusClass = 'bg-green-700 border-green-500';
+						// Find the friendly units that are countering this enemy unit
+						const counteringUnits = weaknesses.filter(counter => friendlyUnits[counter] > 0);
+
+						// Build the message string
+						const counteringMessage = counteringUnits.map(unitName => {
+							const quantity = friendlyUnits[unitName];
+							return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)}`
+						}).join(', ');
+
+						// Add a new paragraph or span to your list item to show the counters
+						const counterInfo = document.createElement('p');
+						counterInfo.classList.add('text-sm', 'text-gray-300', 'mt-1');
+						counterInfo.textContent = `Countered by: ${counteringMessage}`;
+						li.appendChild(counterInfo);
                     } else {
                         statusText = 'Needs Counters ❌';
                         statusClass = 'bg-red-700 border-red-500';
@@ -337,6 +353,13 @@
                     // Only show counter recommendations if the unit is not yet countered
                     if (!isCountered) {
                         const unownedCounters = weaknesses.filter(counter => !friendlyUnits[counter] || friendlyUnits[counter] === 0);
+						// Sort the unownedCounters array by cost
+						unownedCounters.sort((a, b) => {
+							// Get the cost for unit 'a' and unit 'b'
+							const costA = mechData[a]?.cost || Infinity; // Use Infinity if cost is missing
+							const costB = mechData[b]?.cost || Infinity;
+							return costA - costB; // This sorts in ascending order (lowest cost first)
+						});
                         if (unownedCounters.length > 0) {
                             const counterList = document.createElement('ul');
                             counterList.classList.add('list-disc', 'list-inside', 'text-gray-300', 'ml-4', 'mt-1');
@@ -431,7 +454,7 @@
                 if (action === 'ad') action = 'add'; // Handle common misrecognition
                 if (action === 'bad') action = 'add'; // Handle common misrecognition
                 if (action === 'had') action = 'add'; // Handle common misrecognition
-                if (action === 'I had') action = 'add'; // Handle common misrecognition
+                if (action === 'i had') action = 'add'; // Handle common misrecognition
 
                 // Find the quantity and unit type
                 let wordsAfterAction = commandWords.slice(1);
@@ -444,6 +467,10 @@
                     // Remove the number from the array
                     wordsAfterAction.splice(numberIndex, 1);
                 }
+				// Check if the first word is "a" or "an" and remove it
+				if (wordsAfterAction.length > 0 && (wordsAfterAction[0] === 'a' || wordsAfterAction[0] === 'an')) {
+					wordsAfterAction.splice(0, 1);
+				}
 
                 // Look for unit type (friendly, enemy)
                 const unitTypeIndex = wordsAfterAction.findIndex(word => word === 'friendly' || word === 'enemy');
@@ -531,7 +558,7 @@
                 // Event handler for when a command is recognized
                 recognition.onresult = (event) => {
                     for (let i = event.resultIndex; i < event.results.length; ++i) {
-                        const transcript = event.results[i][0].transcript.trim();
+                        const transcript = event.results[i][0].transcript.trim().toLowerCase();
                         if (event.results[i].isFinal) {
                             processCommand(transcript);
                         }
