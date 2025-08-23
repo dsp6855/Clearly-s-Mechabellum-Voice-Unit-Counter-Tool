@@ -426,7 +426,7 @@
 							const li = document.createElement('li');
 							li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
 							const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
-							li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white">Weak against: ${counteringUnits}</span>`;
+							li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
 							avoidUnitsList.appendChild(li);
 						}
 					}
@@ -465,7 +465,7 @@
 						const li = document.createElement('li');
 						li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
 						const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
-						li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white">Weak against: ${counteringUnits}</span>`;
+						li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
 						avoidPurchasingList.appendChild(li);
 					}
 				}
