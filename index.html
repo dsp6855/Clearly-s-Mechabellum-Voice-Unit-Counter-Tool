@@ -129,7 +129,7 @@
                 "Vulcan": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, anti-swarm, fire, large spash, 95 range,target ground only, single unit, high hp", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "War Factory": { "category": ["titan", "ground", "ranged", "splash"], "descriptions": "titan, produces other units, high hp, expensive, 100 range, targets ground only, splash, slow, upkeep cost", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Wasp": { "category": ["light", "air", "ranged"], "descriptions": "light, air, 12 units, 50 range, high speed, targets air and ground, low HP", "unitCount": 12, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
-                "Wrath": { "category": ["heavy", "air", "ranged", "splash"], "descriptions": "heavy, air, single unit, 60 range, splash", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 300 }
+                "Wraith": { "category": ["heavy", "air", "ranged", "splash"], "descriptions": "heavy, air, single unit, 60 range, splash", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 300 }
             };
             
             // This is the correct counters data, replacing the previous duplicate.
@@ -164,7 +164,7 @@
                 "Vulcan": { "weakness": ["Fortress", "Melting Point", "Overlord", "Phoenix", "Steel Ball"], "strong_counter": ["Crawler", "Arclight", "Marksman", "Mustang", "Sledgehammer"] },
                 "War Factory": { "weakness": ["Melting Point", "Scorpion", "Overlord"], "strong_counter": ["Arclight", "Stormcaller", "Sledgehammer", "Steel Ball", "Rhino", "Sabertooth", "Vulcan", "Typhoon"] },
                 "Wasp": { "weakness": ["Mustang", "Fang", "Wrath"], "strong_counter": ["Marksman", "Phoenix", "Melting Point", "Overlord"] },
-                "Wrath": { "weakness": ["Fortress", "Tarantula", "Marksman", "Wasp"], "strong_counter": ["Crawler", "Mustang", "Arclight", "Sledgehammer", "Steel Ball", "Rhino"] }
+                "Wraith": { "weakness": ["Fortress", "Tarantula", "Marksman", "Wasp"], "strong_counter": ["Crawler", "Mustang", "Arclight", "Sledgehammer", "Steel Ball", "Rhino"] }
             };
             
             // This loop adds each unit to its own weakness array for complete counter logic.
@@ -185,6 +185,7 @@
             // Map for handling common voice recognition misrecognitions or alternate names
             const nameMap = {
 				'of this': 'Abyss',
+				'abyss': 'Abyss',
                 'abysses': 'Abyss',
                 'arc light': 'Arclight',
                 'arclights': 'Arclight',
@@ -202,6 +203,7 @@
                 'far sear': 'Farseer',
                 'fars here': 'Farseer',
                 'fortresses': 'Fortress',
+				'fortress': 'Fortress',
 				'fire badgers': 'Fire Badger',
                 'hackers': 'Hacker',
                 'hounds': 'Hounds',
@@ -232,6 +234,7 @@
                 'sledgehammers': 'Sledgehammer',
                 'steel balls': 'Steel Ball',
                 'steel ball': 'Steel Ball',
+                'stool balls': 'Steel Ball',
                 'still balls': 'Steel Ball',
                 'stormcallers': 'Stormcaller',
                 'storm collars': 'Stormcaller',
@@ -245,13 +248,14 @@
                 'void I': 'Void Eye',
                 'void i': 'Void Eye',
                 'vulcans': 'Vulcan',
+				'war factory': 'War Factory',
                 'war factories': 'War Factory',
                 'War Factory': 'War Factory',
                 'work Factory': 'War Factory',
                 'more Factory': 'War Factory',
                 'more factories': 'War Factory',
                 'wasps': 'Wasp',
-                'wraths': 'Wrath'
+                'wraiths': 'Wraith'
             };
 
 			// --- STATE ---
