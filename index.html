@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v1.7</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v2.0</span>
         
         <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
 
@@ -63,6 +64,19 @@
             </ul>
         </div>
 
+		<!-- Units to Avoid -->
+		<div class="bg-gray-700 p-4 rounded-lg shadow-inner mt-4">
+			<h2 class="text-xl font-semibold text-white mb-2">Your Units Being Countered</h2>
+			<ul id="avoid-units-list" class="list-disc pl-5 space-y-2 text-sm">
+				<li class="text-gray-400">Add friendly units to see what is being countered.</li>
+			</ul>
+		</div>
+		<div class="p-4 bg-red-900 rounded-lg shadow-lg">
+			<h3 class="text-xl font-bold mb-2 text-white">Units to Avoid Purchasing 💸</h3>
+			<ul id="avoid-purchasing-list">
+				</ul>
+		</div>
+
         <!-- Footer -->
         <div class="mt-8 text-center text-gray-400 text-xs">
             <p>Code available on <a href="https://github.com/dsp6855/Clearly-s-Mechabellum-Voice-Unit-Counter-Tool/tree/main" class="text-indigo-400 hover:underline">GitHub</a></p>
@@ -86,72 +100,72 @@
             // --- DATA ---
             // A mock mechData object with a "unitCount" and "cost" property.
             const mechData = {
-                "Abyss": { "category": ["titan", "air", "ranged", "splash"], "descriptions": "Titan, air, late game, single unit, 100 range, splash, targets air and ground, upkeep cost", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 800 },
+                "Abyss": { "category": ["titan", "air", "ranged", "splash"], "descriptions": "Titan, air, late game, single unit, 100 range, splash, targets air and ground, upkeep cost", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
                 "Arclight": { "category": ["medium", "ground", "ranged", "splash"], "descriptions": "Medium, ground, anti-swarm, can do anti-air, single unit, splash, 93 range", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 100 },
                 "Crawler": { "category": ["light", "ground", "melee"], "descriptions": "light, melee, ground, attacks ground only, 24 units, high speed", "unitCount": 24, "isAirUnit": false, "targets": ["ground"], "cost": 100 },
                 "Fang": { "category": ["light", "ground", "ranged"], "descriptions": "light, ground, all-purpose, 18 units, 75 range, targets air and ground, can hide, high speed", "unitCount": 18, "isAirUnit": false, "targets": ["air", "ground"], "cost": 100 },
                 "Farseer": { "category": ["large", "ground", "ranged", "splash"], "descriptions": "large, high speed, splash, 125 range, attack air and ground, single unit, rocket", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "cost": 300 },
-                "Fire Badger": { "category": ["medium", "ground", "ranged", "splash"], "descriptions": "medium, anti-swarm tank, splash, 60 range, targets ground only, 3 units", "unitCount": 3, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Fortress": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, high damage, rocket, ground only target, 100 range, splash, slow, high hp, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 400 },
+                "Fire Badger": { "category": ["medium", "ground", "ranged", "splash"], "descriptions": "medium, anti-swarm tank, splash, 60 range, targets ground only, 3 units", "unitCount": 3, "isAirUnit": false, "targets": ["ground"], "cost": 150 },
+                "Fortress": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, high damage, rocket, ground only target, 100 range, splash, slow, high hp, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Hacker": { "category": ["medium", "ground", "special", "ranged"], "descriptions": "hacker, ground, disables tech, 110 range, high speed", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Hounds": { "category": ["light", "ground", "ranged", "splash"], "descriptions": "high-speed, anti-unit, ground only, 70 range, 5 units", "unitCount": 5, "isAirUnit": false, "targets": ["ground"], "cost": 100 },
                 "Marksman": { "category": ["light", "ground", "ranged"], "descriptions": "light, anti-air, targets air and ground, 140 range, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "cost": 100 },
-                "Melting Point": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "heavy, ground, anti-armor, flame, 115 range, large splash, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "cost": 400 },
-                "Mountain": { "category": ["titan", "ground", "ranged", "splash"], "descriptions": "giant, high hp, slow, ranged, 100 range, target ground only, 1 units", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 800 },
+                "Melting Point": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "heavy, ground, anti-armor, flame, 115 range, large splash, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "cost": 200 },
+                "Mountain": { "category": ["titan", "ground", "ranged", "splash"], "descriptions": "giant, high hp, slow, ranged, 100 range, target ground only, 1 units", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Mustang": { "category": ["light", "ground", "ranged"], "descriptions": "light, mobile, anti-air, targets air and ground, 95 range, 12 units", "unitCount": 12, "isAirUnit": false, "targets": ["air", "ground"], "cost": 200 },
-                "Overlord": { "category": ["giant", "air", "ranged", "splash"], "descriptions": "giant, anti-swarm, fire, 120 range, splash, single unit, high hp, fast", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 500 },
+                "Overlord": { "category": ["giant", "air", "ranged", "splash"], "descriptions": "giant, anti-swarm, fire, 120 range, splash, single unit, high hp, fast", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
                 "Phantom Ray": { "category": ["medium", "air", "ranged", "splash"], "descriptions": "light, air, 65 range, high speed, single unit, splash, targets air and ground, low hp", "unitCount": 3, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
                 "Phoenix": { "category": ["medium", "air", "ranged", "splash"], "descriptions": "medium, air, 120 range, targets air and ground, 2 units, splash, high speed", "unitCount": 2, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
-                "Raiden": { "category": ["giant", "air", "ranged"], "descriptions": "heavy, ground, 110 range, single unit, targets air and ground, rocket", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 400 },
+                "Raiden": { "category": ["giant", "air", "ranged"], "descriptions": "heavy, ground, 110 range, single unit, targets air and ground, rocket", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
                 "Rhino": { "category": ["heavy", "ground", "melee", "splash"], "descriptions": "heavy, high hp, ground, anti-armor, single unit, splash", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Sabertooth": { "category": ["heavy", "ground", "ranged"], "descriptions": "heavy, 90 range, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Sandworm": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, ground, splash, single unit, burrow. Can attack air with tech upgrade.", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 400 },
+                "Sabertooth": { "category": ["heavy", "ground", "ranged"], "descriptions": "heavy, 90 range, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 150 },
+                "Sandworm": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, ground, splash, single unit, burrow. Can attack air with tech upgrade.", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Scorpion": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy, anti-swarm, big splsh, high damage, slow speed, target ground only, single unit, 100 range", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 300 },
                 "Sledgehammer": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "Heavy Tank, ranged, ground target, splash, slow, 95 range, 5 units", "unitCount": 5, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Steel Ball": { "category": ["medium", "ground", "ranged"], "descriptions": "high-speed, anti-unit, ground only 45 range, attack grows longer attacking, 4 units", "unitCount": 4, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Stormcaller": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy rocket launcher, target ground only, splash, 180 range, 4 units, rockets", "unitCount": 4, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Tarantula": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy, splash, 80 range, fast attack, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Typhoon": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy, all purpose, splash, quick attack, 100 range, targets air and ground, 2 units", "unitCount": 2, "isAirUnit": false, "targets": ["air", "ground"], "cost": 300 },
+                "Typhoon": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy, all purpose, splash, quick attack, 100 range, targets air and ground, 2 units", "unitCount": 2, "isAirUnit": false, "targets": ["air", "ground"], "cost": 150 },
                 "Void Eye": { "category": ["light", "ground", "special", "ranged"], "descriptions": "light, high damage, 100 range, target ground only, 3 units. Can attack air with tech upgrade.", "unitCount": 3, "isAirUnit": false, "targets": ["ground"], "cost": 100 },
-                "Vulcan": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, anti-swarm, fire, large spash, 95 range,target ground only, single unit, high hp", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 400 },
-                "War Factory": { "category": ["titan", "ground", "ranged", "splash"], "descriptions": "titan, produces other units, high hp, expensive, 100 range, targets ground only, splash, slow, upkeep cost", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 800 },
+                "Vulcan": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, anti-swarm, fire, large spash, 95 range,target ground only, single unit, high hp", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
+                "War Factory": { "category": ["titan", "ground", "ranged", "splash"], "descriptions": "titan, produces other units, high hp, expensive, 100 range, targets ground only, splash, slow, upkeep cost", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
                 "Wasp": { "category": ["light", "air", "ranged"], "descriptions": "light, air, 12 units, 50 range, high speed, targets air and ground, low HP", "unitCount": 12, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
-                "Wraith": { "category": ["heavy", "air", "ranged", "splash"], "descriptions": "heavy, air, single unit, 60 range, splash", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 300 }
+                "Wrath": { "category": ["heavy", "air", "ranged", "splash"], "descriptions": "heavy, air, single unit, 60 range, splash", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 300 }
             };
             
             // This is the correct counters data, replacing the previous duplicate.
             const countersData = {
-                "Abyss": { "weakness": ["Marksman", "Mustang", "Wasp", "Melting Point"], "resistance": [] },
-                "Arclight": { "weakness": ["Stormcaller", "Steel Ball", "Rhino", "Scorpion", "Vulcan", "Overlord", "Melting Point", "Fortress", "War Factory"], "resistance": ["Crawler", "Hounds", "Steel Ball", "Fang", "Mustang"] },
-                "Crawler": { "weakness": ["Arclight", "Mustang", "Fire Badger", "Vulcan", "Sledgehammer", "Rhino", "Wraith"], "resistance": ["Fang", "Marksman", "Sabertooth", "Steel Ball", "Melting Point", "Hacker"] },
-                "Fang": { "weakness": ["Fire Badger", "Typhoon", "Mustang", "Steel Ball", "Wraith", "Rhino","Vulcan"], "resistance": ["Marksman", "Wasp", "Phoenix", "Overlord"] },
-                "Farseer": { "weakness": ["Rhino", "Melting Point", "Fortress", "War Factory"], "resistance": ["Marksman", "Hacker", "Phoenix", "Wraith", "Tarantula"] },
-                "Fire Badger": { "weakness": ["Rhino", "Fortress", "War Factory", "Sabertooth", "Overlord"], "resistance": ["Crawler", "Fang", "Arclight", "Mustang"] },
-                "Fortress": { "weakness": ["Fang", "Steel Ball", "Overlord", "Melting Point", "Sandworm"], "resistance": ["Sledgehammer", "Tarantula", "Vulcan", "Fire Badger", "Typhoon"] },
-                "Hacker": { "weakness": ["Fang", "Stormcaller", "War Factory", "Phoenix", "Crawler", "Overlord"], "resistance": ["Fire Badger", "Arclight", "Scorpion", "Sledgehammer", "Steel Ball"] },
-                "Hounds": { "weakness": ["Fire Badger", "Vulcan", "Overlord", "Arclight", "Melting Point", "Scorpion", "Sledgehammer", "Steel Ball", "Rhino", "Tarantula"], "resistance": ["Fang", "Mustang", "Wasp", "Phantom Ray", "Phoenix", "Farseer", "Raiden", "Wraith", "Hacker"] },
-                "Marksman": { "weakness": ["Crawler", "Fang", "Mustang", "War Factory", "Farseer"], "resistance": ["Arclight", "Hacker","Overlord", "Phoenix", "Wraith"] },
-                "Melting Point": { "weakness": ["Crawler", "Marksman", "Phoenix","Steel Ball"], "resistance": ["Scorpion", "Fortress", "Rhino", "Vulcan", "Typhoon", "Wraith"] },
-                "Mountain": { "weakness": ["Rhino", "Sledgehammer", "Scorpion", "Vulcan", "Overlord", "Melting Point", "Stormcaller", "Tarantula"], "resistance": ["Crawler", "Hounds", "Sabertooth", "Steel Ball", "Void Eye", "Sandworm"] },
-                "Mustang": { "weakness": ["Fang", "Arclight", "Rhino", "Wasp","Phoenix","Overlord","Farseer", "Tarantula"], "resistance": ["Crawler", "Vulcan", "Sledgehammer", "War Factory", "Typhoon", "Fire Badger"] },
-                "Overlord": { "weakness": ["Melting Point", "Phoenix", "Wasp", "Mustang"], "resistance": ["Rhino", "Steel Ball", "Sledgehammer", "Stormcaller", "Vulcan", "Arclight", "Hacker", "Scorpion", "Fire Badger", "Sabertooth", "Typhoon", "Wraith"] },
-                "Phantom Ray": { "weakness": ["Marksman", "Mustang", "Wasp", "Typhoon", "Phoenix", "Farseer", "Raiden", "Wraith"], "resistance": ["Arclight", "Fire Badger", "Fortress", "Melting Point", "Rhino", "Sabertooth", "Sandworm", "Scorpion", "Sledgehammer", "Steel Ball", "Stormcaller", "Tarantula", "Typhoon", "Vulcan", "War Factory", "Wraith"] },
-                "Phoenix": { "weakness": ["Mustang", "Fang", "Wasp", "Marksman", "Farseer"], "resistance": ["Overlord", "Stormcaller", "Vulcan", "Typhoon", "Sabertooth", "Fire Badger"] },
-                "Raiden": { "weakness": ["Farseer", "Marksman", "Melting Point", "Overlord", "Phoenix"], "resistance": ["Fire Badger", "Sledgehammer", "Steel Ball", "Stormcaller", "Wraith"] },
-                "Rhino": { "weakness": ["Steel Ball", "War Factory", "Phoenix", "Melting Point", "Hacker", "Overlord"], "resistance": ["Fire Badger", "Crawler", "Mustang", "Vulcan", "Stormcaller", "Marksman"] },
-                "Sabertooth": { "weakness": ["Crawler", "Fang", "Steel Ball", "Melting Point", "Fortress", "War Factory"], "resistance": ["Sledgehammer", "Tarantula", "Hacker", "Vulcan", "Typhoon", "Fire Badger", "Farseer"] },
-                "Sandworm": { "weakness": ["Melting Point", "War Factory", "Mountain"], "resistance": ["Crawler", "Hacker", "Hounds", "Marksman", "Melting Point", "Sabertooth", "Steel Ball", "Void Eye", "Fortress"] },
-                "Scorpion": { "weakness": ["Wasp", "Overlord", "Phoenix"], "resistance": ["Sledgehammer", "Tarantula", "Hacker", "Vulcan", "Fire Badger", "Typhoon", "War Factory"] },
-                "Sledgehammer": { "weakness": ["Phoenix", "Vulcan", "War Factory"], "resistance": ["Crawler", "Mustang", "Arclight"] },
-                "Steel Ball": { "weakness": ["Crawler", "Phoenix", "Overlord"], "resistance": ["Sledgehammer", "Tarantula", "Rhino", "Sandworm"] },
-                "Stormcaller": { "weakness": ["Marksman", "Arclight", "Mustang", "Vulcan", "Fortress", "Typhoon", "Fang", "Overlord"], "resistance": ["Rhino", "Sledgehammer", "War Factory"] },
-                "Tarantula": { "weakness": ["Steel Ball", "War Factory", "Stormcaller", "Fortress", "Marksman", "Melting Point", "Overlord", "Phoenix", "Farseer"], "resistance": ["Arclight", "Mustang", "Hacker"] },
-                "Typhoon": { "weakness": ["War Factory", "Steel Ball", "Scorpion", "Melting Point", "Phoenix", "Sabertooth", "Fortress"], "resistance": ["Mustang", "Wasp", "Crawler", "Fang", "Hounds", "Wraith"] },
-                "Void Eye": { "weakness": ["Crawler", "Melting Point", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Typhoon", "Vulcan"], "resistance": ["Hacker", "Hounds", "Marksman", "Sabertooth", "Stormcaller"] },
-                "Vulcan": { "weakness": ["Fortress", "Melting Point", "Overlord", "Phoenix", "Steel Ball"], "resistance": ["Crawler", "Arclight", "Marksman", "Mustang", "Sledgehammer"] },
-                "War Factory": { "weakness": ["Melting Point", "Scorpion", "Overlord"], "resistance": ["Arclight", "Stormcaller", "Sledgehammer", "Steel Ball", "Rhino", "Sabertooth", "Vulcan", "Typhoon", "Sandworm"] },
-                "Wasp": { "weakness": ["Mustang", "Fang", "Wraith"], "resistance": ["Marksman", "Phoenix", "Melting Point", "Overlord"] },
-                "Wraith": { "weakness": ["Typhoon", "Phantom Ray", "Raiden", "Melting Point", "Overlord"], "resistance": ["Crawler", "Mustang", "Arclight", "Sledgehammer", "Steel Ball", "Rhino", "Fang"] }
+                "Abyss": { "weakness": ["Marksman", "Mustang", "Wasp", "Melting Point"], "strong_counter": [] },
+                "Arclight": { "weakness": ["Stormcaller", "Steel Ball", "Rhino", "Scorpion", "Vulcan", "Overlord", "Melting Point", "Fortress", "War Factory"], "strong_counter": ["Crawler", "Hounds", "Steel Ball", "Fang", "Mustang"] },
+                "Crawler": { "weakness": ["Arclight", "Mustang", "Fire Badger", "Vulcan", "Sledgehammer", "Rhino", "Wrath"], "strong_counter": ["Fang", "Marksman", "Sabertooth", "Steel Ball", "Melting Point", "Hacker"] },
+                "Fang": { "weakness": ["Fire Badger", "Typhoon", "Mustang", "Steel Ball", "Wrath", "Rhino","Vulcan"], "strong_counter": ["Marksman", "Wasp", "Phoenix", "Overlord"] },
+                "Farseer": { "weakness": ["Rhino", "Melting Point", "Fortress", "War Factory"], "strong_counter": ["Marksman", "Hacker", "Phoenix", "Wrath"] },
+                "Fire Badger": { "weakness": ["Rhino", "Fortress", "War Factory", "Sabertooth", "Overlord"], "strong_counter": ["Crawler", "Fang", "Arclight", "Mustang"] },
+                "Fortress": { "weakness": ["Fang", "Steel Ball", "Overlord", "Melting Point"], "strong_counter": ["Sledgehammer", "Tarantula", "Vulcan", "Fire Badger", "Typhoon"] },
+                "Hacker": { "weakness": ["Fang", "Stormcaller", "War Factory", "Phoenix", "Crawler", "Overlord"], "strong_counter": ["Fire Badger", "Arclight", "Scorpion", "Sledgehammer", "Steel Ball"] },
+                "Hounds": { "weakness": ["Fire Badger", "Vulcan", "Overlord", "Arclight", "Melting Point", "Scorpion", "Sledgehammer", "Steel Ball", "Rhino", "Tarantula"], "strong_counter": ["Fang", "Mustang", "Wasp", "Phantom Ray", "Phoenix", "Farseer", "Raiden", "Wrath", "Hacker"] },
+                "Marksman": { "weakness": ["Crawler", "Fang", "Mustang", "War Factory", "Farseer"], "strong_counter": ["Arclight", "Hacker","Overlord", "Phoenix", "Wrath"] },
+                "Melting Point": { "weakness": ["Crawler", "Marksman", "Phoenix","Steel Ball"], "strong_counter": ["Scorpion", "Fortress", "Rhino", "Vulcan", "Typhoon"] },
+                "Mountain": { "weakness": ["Rhino", "Sledgehammer", "Scorpion", "Vulcan", "Overlord", "Melting Point", "Sandworm", "Stormcaller", "Tarantula"], "strong_counter": ["Crawler", "Hounds", "Sabertooth", "Steel Ball", "Void Eye"] },
+                "Mustang": { "weakness": ["Fang", "Arclight", "Rhino", "Wasp","Phoenix","Overlord","Farseer", "Tarantula"], "strong_counter": ["Crawler", "Vulcan", "Sledgehammer", "War Factory", "Typhoon", "Fire Badger"] },
+                "Overlord": { "weakness": ["Melting Point", "Phoenix", "Wasp", "Mustang"], "strong_counter": ["Rhino", "Steel Ball", "Sledgehammer", "Stormcaller", "Vulcan", "Arclight", "Hacker", "Scorpion", "Fire Badger", "Sabertooth", "Typhoon"] },
+                "Phantom Ray": { "weakness": ["Marksman", "Mustang", "Wasp", "Typhoon", "Phoenix", "Farseer", "Raiden", "Wrath"], "strong_counter": ["Arclight", "Fire Badger", "Fortress", "Melting Point", "Rhino", "Sabertooth", "Sandworm", "Scorpion", "Sledgehammer", "Steel Ball", "Stormcaller", "Tarantula", "Typhoon", "Vulcan", "War Factory"] },
+                "Phoenix": { "weakness": ["Mustang", "Fang", "Wasp", "Marksman", "Farseer"], "strong_counter": ["Overlord", "Stormcaller", "Vulcan", "Typhoon", "Sabertooth", "Fire Badger"] },
+                "Raiden": { "weakness": ["Farseer", "Marksman", "Melting Point", "Overlord", "Phoenix"], "strong_counter": ["Fire Badger", "Sledgehammer", "Steel Ball", "Stormcaller"] },
+                "Rhino": { "weakness": ["Steel Ball", "War Factory", "Phoenix", "Melting Point", "Hacker", "Overlord"], "strong_counter": ["Fire Badger", "Crawler", "Mustang", "Vulcan", "Stormcaller", "Marksman"] },
+                "Sabertooth": { "weakness": ["Crawler", "Fang", "Steel Ball", "Melting Point", "Fortress", "War Factory"], "strong_counter": ["Sledgehammer", "Tarantula", "Hacker", "Vulcan", "Typhoon", "Fire Badger", "Farseer"] },
+                "Sandworm": { "weakness": ["Sledgehammer", "Stormcaller", "Tarantula"], "strong_counter": ["Crawler", "Hacker", "Hounds", "Marksman", "Melting Point", "Sabertooth", "Steel Ball", "Void Eye"] },
+                "Scorpion": { "weakness": ["Wasp", "Overlord", "Phoenix"], "strong_counter": ["Sledgehammer", "Tarantula", "Hacker", "Vulcan", "Fire Badger", "Typhoon", "War Factory"] },
+                "Sledgehammer": { "weakness": ["Phoenix", "Vulcan", "War Factory"], "strong_counter": ["Crawler", "Mustang", "Arclight"] },
+                "Steel Ball": { "weakness": ["Crawler", "Phoenix", "Overlord"], "strong_counter": ["Sledgehammer", "Tarantula", "Rhino", "Sandworm"] },
+                "Stormcaller": { "weakness": ["Marksman", "Arclight", "Mustang", "Vulcan", "Fortress", "Typhoon", "Fang", "Overlord"], "strong_counter": ["Rhino", "Sledgehammer", "War Factory"] },
+                "Tarantula": { "weakness": ["Steel Ball", "War Factory", "Stormcaller", "Fortress", "Marksman", "Melting Point", "Overlord", "Phoenix"], "strong_counter": ["Arclight", "Mustang", "Hacker"] },
+                "Typhoon": { "weakness": ["War Factory", "Steel Ball", "Scorpion", "Melting Point", "Phoenix", "Sabertooth"], "strong_counter": ["Mustang", "Wasp", "Crawler", "Fang", "Hounds"] },
+                "Void Eye": { "weakness": ["Crawler", "Melting Point", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Typhoon", "Vulcan"], "strong_counter": ["Hacker", "Hounds", "Marksman", "Sabertooth", "Stormcaller"] },
+                "Vulcan": { "weakness": ["Fortress", "Melting Point", "Overlord", "Phoenix", "Steel Ball"], "strong_counter": ["Crawler", "Arclight", "Marksman", "Mustang", "Sledgehammer"] },
+                "War Factory": { "weakness": ["Melting Point", "Scorpion", "Overlord"], "strong_counter": ["Arclight", "Stormcaller", "Sledgehammer", "Steel Ball", "Rhino", "Sabertooth", "Vulcan", "Typhoon"] },
+                "Wasp": { "weakness": ["Mustang", "Fang", "Wrath"], "strong_counter": ["Marksman", "Phoenix", "Melting Point", "Overlord"] },
+                "Wrath": { "weakness": ["Fortress", "Tarantula", "Marksman", "Wasp"], "strong_counter": ["Crawler", "Mustang", "Arclight", "Sledgehammer", "Steel Ball", "Rhino"] }
             };
             
             // This loop adds each unit to its own weakness array for complete counter logic.
@@ -165,20 +179,17 @@
             
             // Map for converting spoken numbers to integers
             const numberWords = {
-                'one': 1, 'an':1, 'a':1, 'two': 2, 'to':2, 'three': 3, 'through':3, 'four': 4, 'for':4, 'five': 5,
+                'one': 1, 'an':1, 'a':1, 'two': 2, 'to':2, 'too':2, 'three': 3, 'through':3, 'four': 4, 'for':4, 'five': 5,
                 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10
             };
             
             // Map for handling common voice recognition misrecognitions or alternate names
             const nameMap = {
 				'of this': 'Abyss',
-                'a best': 'Abyss',
-                'abyss': 'Abyss',
                 'arc light': 'Arclight',
                 'arclights': 'Arclight',
                 'arc lights': 'Arclight',
                 'fire badgers': 'Fire Badger',
-                'fire badger': 'Fire Badger',
                 'wasps': 'Wasp',
                 'crawlers': 'Crawler',
                 'crawler': 'Crawler',
@@ -187,7 +198,6 @@
                 'hand': 'Hounds',
                 'fangs': 'Fang',
                 'things': 'Fang',
-                'thing': 'Fang',
                 'marksmen': 'Marksman', // Added for irregular plural
                 'marskmans': 'Marksman', // Added for common typo
                 'mustangs': 'Mustang',
@@ -200,9 +210,6 @@
                 'void I': 'Void Eye',
                 'void i': 'Void Eye',
                 'sledgehammers': 'Sledgehammer',
-                'sledgehammer': 'Sledgehammer',
-                'sledge hammers': 'Sledgehammer',
-                'sledge hammer': 'Sledgehammer',
                 'stormcallers': 'Stormcaller',
                 'storm collars': 'Stormcaller',
                 'storm coller': 'Stormcaller',
@@ -222,12 +229,11 @@
                 'farce here': 'Farseer',
                 'Farsiers': 'Farseer',
                 'Farsier': 'Farseer',
-                'farsier': 'Farseer',
                 'five Sears': 'Farseer',
                 'farts here': 'Farseer',
+                'far sear': 'Farseer',
                 'fars here': 'Farseer',
                 'fortresses': 'Fortress',
-                'fortress': 'Fortress',
                 'hackers': 'Hacker',
                 'melting points': 'Melting Point', 
                 'melting point': 'Melting Point', 
@@ -235,181 +241,230 @@
                 'mountains': 'Mountain',
                 'overlords': 'Overlord',
                 'raidens': 'Raiden',
-                'ratings': 'Raiden',
                 'sandworms': 'Sandworm',
                 'sand worms': 'Sandworm',
                 'sand worm': 'Sandworm',
                 'vulcans': 'Vulcan',
                 'war factories': 'War Factory',
                 'War Factory': 'War Factory',
-                'war factory': 'War Factory',
-                'war factoring': 'War Factory',
                 'work Factory': 'War Factory',
                 'more Factory': 'War Factory',
                 'more factories': 'War Factory',
-                'wraths': 'Wraith',
-                'wraiths': 'Wraith',
-                'wraith': 'Wraith'
+                'wraths': 'Wrath'
             };
 
-            const friendlyTerms = ['friendly', 'friend', 'friends', 'our', 'ally', 'allied', 'my', 'me', 'us', 'team'];
-            const enemyTerms = ['enemy', 'enemies', 'enemy\'s', 'foe', 'opponent', 'their', 'them', 'opposing', 'opponent\'s', 'opponents'];
+			// --- STATE ---
+			let friendlyUnits = {};
+			let enemyUnits = {};
+			let isListening = false;
+			let recognition = null;
+			let finalTranscript = '';
+			let lastTranscript = '';
 
-            let friendlyUnits = {}; // This object stores friendly units and their counts.
-            let enemyUnits = {}; // This object stores enemy units and their counts.
-            let recognition;
-            let isListening = false;
+			// --- DOM ELEMENTS ---
+			const toggleButton = document.getElementById('toggle-voice-btn');
+			const statusMessage = document.getElementById('status-message');
+			const friendlyUnitsList = document.getElementById('friendly-units-list');
+			const enemyUnitsList = document.getElementById('enemy-units-list');
+			const friendlyUnitsTitle = document.getElementById('friendly-units-title');
+			const enemyUnitsTitle = document.getElementById('enemy-units-title');
+			const recommendationsList = document.getElementById('recommendations-list');
+			const aerialWarning = document.getElementById('aerial-warning');
+			const advantageSideSpan = document.getElementById('advantage-side');
+			const avoidUnitsList = document.getElementById('avoid-units-list'); // New element
 
-            // --- DOM ELEMENTS ---
-            const toggleButton = document.getElementById('toggle-voice-btn');
-            const statusMessage = document.getElementById('status-message');
-            const friendlyUnitsList = document.getElementById('friendly-units-list');
-            const enemyUnitsList = document.getElementById('enemy-units-list');
-            const friendlyUnitsTitle = document.getElementById('friendly-units-title');
-            const enemyUnitsTitle = document.getElementById('enemy-units-title');
-            const recommendationsList = document.getElementById('recommendations-list');
-            const aerialWarning = document.getElementById('aerial-warning');
-            const advantageSideSpan = document.getElementById('advantage-side');
+			// --- FUNCTIONS ---
+			/**
+			 * Updates the displayed lists of friendly and enemy units.
+			 */
+			const updateUnitsDisplay = () => {
+				friendlyUnitsList.innerHTML = '';
+				enemyUnitsList.innerHTML = '';
 
-            // --- FUNCTIONS ---
-            /**
-             * Updates the displayed lists of friendly and enemy units.
-             */
-            const updateUnitsDisplay = () => {
-                // Clear existing lists
-                friendlyUnitsList.innerHTML = '';
-                enemyUnitsList.innerHTML = '';
+				const friendlyUnitNames = Object.keys(friendlyUnits);
+				if (friendlyUnitNames.length === 0) {
+					friendlyUnitsList.innerHTML = '<li class="text-white">Add friendly units via voice.</li>';
+				} else {
+					friendlyUnitNames.forEach(unit => {
+						const li = document.createElement('li');
+						li.textContent = `${unit.charAt(0).toUpperCase() + unit.slice(1)} x${friendlyUnits[unit]}`;
+						friendlyUnitsList.appendChild(li);
+					});
+				}
 
-                // Populate friendly units list
-                const friendlyUnitNames = Object.keys(friendlyUnits);
-                if (friendlyUnitNames.length === 0) {
-                    friendlyUnitsList.innerHTML = '<li class="text-white">Add friendly units via voice.</li>';
-                } else {
-                    friendlyUnitNames.forEach(unit => {
-                        const li = document.createElement('li');
-                        li.textContent = `${unit.charAt(0).toUpperCase() + unit.slice(1)} x${friendlyUnits[unit]}`;
-                        friendlyUnitsList.appendChild(li);
-                    });
-                }
-                
-                // Populate enemy units list
-                const enemyUnitNames = Object.keys(enemyUnits);
-                if (enemyUnitNames.length === 0) {
-                    enemyUnitsList.innerHTML = '<li class="text-white">Add enemy units via voice.</li>';
-                } else {
-                    enemyUnitNames.forEach(unit => {
-                        const li = document.createElement('li');
-                        li.textContent = `${unit.charAt(0).toUpperCase() + unit.slice(1)} x${enemyUnits[unit]}`;
-                        enemyUnitsList.appendChild(li);
-                    });
-                }
-            };
-            
-            /**
-             * Calculates and updates the counter totals.
-             */
-            const updateCounterCalculations = () => {
-                let friendlyUnitGroupsTotal = 0;
-                let enemyUnitGroupsTotal = 0;
+				const enemyUnitNames = Object.keys(enemyUnits);
+				if (enemyUnitNames.length === 0) {
+					enemyUnitsList.innerHTML = '<li class="text-white">Add enemy units via voice.</li>';
+				} else {
+					enemyUnitNames.forEach(unit => {
+						const li = document.createElement('li');
+						li.textContent = `${unit.charAt(0).toUpperCase() + unit.slice(1)} x${enemyUnits[unit]}`;
+						enemyUnitsList.appendChild(li);
+					});
+				}
+			};
 
-                // Calculate total counter value for friendly units (count of groups)
-                Object.keys(friendlyUnits).forEach(unitName => {
-                    const quantity = friendlyUnits[unitName];
-                    friendlyUnitGroupsTotal += quantity;
-                });
-                
-                // Calculate total enemy units for display (count of groups)
-                Object.keys(enemyUnits).forEach(unitName => {
-                    enemyUnitGroupsTotal += enemyUnits[unitName];
-                });
+			/**
+			 * Calculates and updates the counter totals.
+			 */
+			const updateCounterCalculations = () => {
+				let friendlyUnitGroupsTotal = 0;
+				let enemyUnitGroupsTotal = 0;
 
-                // Update the UI with the totals
-                friendlyUnitsTitle.textContent = `Friendly Units: ${friendlyUnitGroupsTotal}`;
-                enemyUnitsTitle.textContent = `Enemy Units: ${enemyUnitGroupsTotal}`;
-            };
-            
-            /**
-             * Renders a list of counter recommendations based on the enemy units, sorted by effectiveness and cost.
-             */
-            const renderRecommendations = () => {
-                recommendationsList.innerHTML = ''; // Clear the list
-                
-                const enemyUnitNames = Object.keys(enemyUnits);
+				Object.keys(friendlyUnits).forEach(unitName => {
+					const quantity = friendlyUnits[unitName];
+					friendlyUnitGroupsTotal += quantity;
+				});
 
-                if (enemyUnitNames.length === 0) {
-                    recommendationsList.innerHTML = '<li class="text-gray-400">Add enemy units to see counters.</li>';
-                    return;
-                }
+				Object.keys(enemyUnits).forEach(unitName => {
+					enemyUnitGroupsTotal += enemyUnits[unitName];
+				});
 
-                enemyUnitNames.forEach(enemyUnitName => {
-                    const weaknesses = countersData[enemyUnitName]?.weakness || [];
-                    const isCountered = weaknesses.some(counter => friendlyUnits[counter] > 0);
-                    
-                    const li = document.createElement('li');
-                    li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border');
+				friendlyUnitsTitle.textContent = `Friendly Units: ${friendlyUnitGroupsTotal}`;
+				enemyUnitsTitle.textContent = `Enemy Units: ${enemyUnitGroupsTotal}`;
+			};
 
-                    let statusText = '';
-                    let statusClass = '';
-                    if (isCountered) {
-                        statusText = 'Countered! ✅';
-                        statusClass = 'bg-green-700 border-green-500';
-						// Find the friendly units that are countering this enemy unit
-						const counteringUnits = weaknesses.filter(counter => friendlyUnits[counter] > 0);
+			/**
+			 * Renders a list of counter recommendations based on the enemy units, sorted by effectiveness and cost.
+			 */
+			const renderRecommendations = () => {
+				recommendationsList.innerHTML = '';
+				const enemyUnitNames = Object.keys(enemyUnits);
 
-						// Build the message string
-						const counteringMessage = counteringUnits.map(unitName => {
-							const quantity = friendlyUnits[unitName];
-							return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)}`
-						}).join(', ');
+				if (enemyUnitNames.length === 0) {
+					recommendationsList.innerHTML = '<li class="text-gray-400">Add enemy units to see counters.</li>';
+				} else {
+					enemyUnitNames.forEach(enemyUnitName => {
+						const weaknesses = countersData[enemyUnitName]?.weakness || [];
+						const isCountered = weaknesses.some(counter => friendlyUnits[counter] > 0);
+						const li = document.createElement('li');
+						li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border');
+						let statusText = '';
+						let statusClass = '';
 
-						// Add a new paragraph or span to your list item to show the counters
-						const counterInfo = document.createElement('p');
-						counterInfo.classList.add('text-sm', 'text-gray-300', 'mt-1');
-						counterInfo.textContent = `Countered by: ${counteringMessage}`;
-						li.appendChild(counterInfo);
-                    } else {
-                        statusText = 'Needs Counters ❌';
-                        statusClass = 'bg-red-700 border-red-500';
-                    }
+						if (isCountered) {
+							statusText = 'Countered! ✅';
+							statusClass = 'bg-green-700 border-green-500';
+							const counteringUnits = weaknesses.filter(counter => friendlyUnits[counter] > 0);
+							const counteringMessage = counteringUnits.map(unitName => {
+								const quantity = friendlyUnits[unitName];
+								return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)}`
+							}).join(', ');
+							const counterInfo = document.createElement('p');
+							counterInfo.classList.add('text-sm', 'text-gray-300', 'mt-1');
+							counterInfo.textContent = `Countered by: ${counteringMessage}`;
+							li.appendChild(counterInfo);
+						} else {
+							statusText = 'Needs Counters ❌';
+							statusClass = 'bg-red-700 border-red-500';
+						}
 
-                    li.innerHTML = `
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-white">${enemyUnitName.charAt(0).toUpperCase() + enemyUnitName.slice(1)}</span>
-                            <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${statusClass}">${statusText}</span>
-                        </div>
-                    `;
+						li.innerHTML = `
+							<div class="flex justify-between items-center mb-1">
+								<span class="font-bold text-white">${enemyUnitName.charAt(0).toUpperCase() + enemyUnitName.slice(1)}</span>
+								<span class="text-xs font-semibold px-2 py-0.5 rounded-full ${statusClass}">${statusText}</span>
+							</div>
+						`;
 
-                    // Only show counter recommendations if the unit is not yet countered
-                    if (!isCountered) {
-                        const unownedCounters = weaknesses.filter(counter => !friendlyUnits[counter] || friendlyUnits[counter] === 0);
-						// Sort the unownedCounters array by cost
-						unownedCounters.sort((a, b) => {
-							// Get the cost for unit 'a' and unit 'b'
-							const costA = mechData[a]?.cost || Infinity; // Use Infinity if cost is missing
-							const costB = mechData[b]?.cost || Infinity;
-							return costA - costB; // This sorts in ascending order (lowest cost first)
+						if (!isCountered) {
+							const unownedCounters = weaknesses.filter(counter => !friendlyUnits[counter] || friendlyUnits[counter] === 0);
+							unownedCounters.sort((a, b) => {
+								const costA = mechData[a]?.cost || Infinity;
+								const costB = mechData[b]?.cost || Infinity;
+								return costA - costB;
+							});
+							if (unownedCounters.length > 0) {
+								const counterList = document.createElement('ul');
+								counterList.classList.add('list-disc', 'list-inside', 'text-gray-300', 'ml-4', 'mt-1');
+								unownedCounters.forEach(counter => {
+									const counterLi = document.createElement('li');
+									const cost = mechData[counter]?.cost || 'N/A';
+									counterLi.innerHTML = `${counter} (Cost: ${cost})`;
+									counterList.appendChild(counterLi);
+								});
+								li.appendChild(counterList);
+							} else {
+								const counterLi = document.createElement('li');
+								counterLi.classList.add('text-gray-400', 'ml-4', 'italic', 'mt-1');
+								counterLi.textContent = "No recommended counters found.";
+								li.appendChild(counterLi);
+							}
+						}
+						recommendationsList.appendChild(li);
+					});
+				}
+
+				// --- Units to Avoid logic ---
+				const friendlyUnitNames = Object.keys(friendlyUnits);
+				if (friendlyUnitNames.length === 0) {
+					avoidUnitsList.innerHTML = '<li class="text-gray-400">Add friendly units to see which to avoid.</li>';
+				} else {
+					const unitsToAvoid = {};
+					friendlyUnitNames.forEach(friendlyUnitName => {
+						Object.keys(enemyUnits).forEach(enemyUnitName => {
+							const enemyWeaknesses = countersData[enemyUnitName]?.weakness || [];
+							if (enemyWeaknesses.includes(friendlyUnitName)) {
+								if (!unitsToAvoid[friendlyUnitName]) {
+									unitsToAvoid[friendlyUnitName] = [];
+								}
+								if (!unitsToAvoid[friendlyUnitName].includes(enemyUnitName)) {
+									unitsToAvoid[friendlyUnitName].push(enemyUnitName);
+								}
+							}
 						});
-                        if (unownedCounters.length > 0) {
-                            const counterList = document.createElement('ul');
-                            counterList.classList.add('list-disc', 'list-inside', 'text-gray-300', 'ml-4', 'mt-1');
-                            unownedCounters.forEach(counter => {
-                                const counterLi = document.createElement('li');
-                                const cost = mechData[counter]?.cost || 'N/A';
-                                counterLi.innerHTML = `${counter} (Cost: ${cost})`;
-                                counterList.appendChild(counterLi);
-                            });
-                            li.appendChild(counterList);
-                        } else {
-                            const counterLi = document.createElement('li');
-                            counterLi.classList.add('text-gray-400', 'ml-4', 'italic', 'mt-1');
-                            counterLi.textContent = "No recommended counters found.";
-                            li.appendChild(counterLi);
-                        }
-                    }
+					});
+					if (Object.keys(unitsToAvoid).length === 0) {
+						avoidUnitsList.innerHTML = '<li class="text-gray-400">No friendly units are weak against enemy units.</li>';
+					} else {
+						avoidUnitsList.innerHTML = '';
+						for (const unitToAvoid in unitsToAvoid) {
+							const li = document.createElement('li');
+							li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+							const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
+							li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white">Weak against: ${counteringUnits}</span>`;
+							avoidUnitsList.appendChild(li);
+						}
+					}
+				}
+				
+				// --- New section for "Units to Avoid Purchasing" ---
+				
+				// Get all possible units from your countersData object
+				const allUnits = Object.keys(countersData);
+				const unitsToAvoidPurchasing = {};
 
-                    recommendationsList.appendChild(li);
-                });
-            };
+				if (enemyUnitNames.length > 0) {
+					// Iterate through all possible units to see which are weak to the current enemy units
+					allUnits.forEach(unitName => {
+						const unitWeaknesses = countersData[unitName]?.weakness || [];
+						Object.keys(enemyUnits).forEach(enemyUnitName => {
+							if (unitWeaknesses.includes(enemyUnitName)) {
+								if (!unitsToAvoidPurchasing[unitName]) {
+									unitsToAvoidPurchasing[unitName] = [];
+								}
+								if (!unitsToAvoidPurchasing[unitName].includes(enemyUnitName)) {
+									unitsToAvoidPurchasing[unitName].push(enemyUnitName);
+								}
+							}
+						});
+					});
+				}
+
+				const avoidPurchasingList = document.getElementById('avoid-purchasing-list');
+				
+				if (Object.keys(unitsToAvoidPurchasing).length === 0) {
+					avoidPurchasingList.innerHTML = '<li class="text-gray-400">No units to avoid purchasing against this enemy composition.</li>';
+				} else {
+					avoidPurchasingList.innerHTML = '';
+					for (const unitToAvoid in unitsToAvoidPurchasing) {
+						const li = document.createElement('li');
+						li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+						const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
+						li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white">Weak against: ${counteringUnits}</span>`;
+						avoidPurchasingList.appendChild(li);
+					}
+				}
+			};
 
             /**
              * Checks for an aerial advantage and displays a warning banner.
@@ -477,24 +532,13 @@
                     console.log('Counters have been reset.');
                     return;
                 }
-
-                // Update the last command display
-                statusMessage.textContent = `Command: "${command}"`;
                 
                 // Check for action (add, remove)
                 action = commandWords[0];
-                // Handle common misrecognitions for "add"
-                if (action === 'ad' || action === 'at' || action === 'bad' || action === 'had' || action === 'i had' || action === 'add') {
-                    action = 'add';
-                // Handle synonyms for removing a unit
-                } else if (action === 'remove' || action === 'delete' || action === 'subtract' || action === 'minus') {
-                    action = 'remove';  
-                // Default to add if no valid action is found, idea is this is the most common command
-                } else {
-                    console.log(`Unknown action: ${action}`);
-                    statusMessage.textContent += ' (' + action + ' unknown action)';
-                    action = 'add'; 
-                }
+                if (action === 'ad') action = 'add'; // Handle common misrecognition
+                if (action === 'bad') action = 'add'; // Handle common misrecognition
+                if (action === 'had') action = 'add'; // Handle common misrecognition
+                if (action === 'i had') action = 'add'; // Handle common misrecognition
 
                 // Find the quantity and unit type
                 let wordsAfterAction = commandWords.slice(1);
@@ -513,31 +557,21 @@
 				}
 
                 // Look for unit type (friendly, enemy)
-                const unitTypeIndex = wordsAfterAction.findIndex(word => friendlyTerms.includes(word) || enemyTerms.includes(word));
+                const unitTypeIndex = wordsAfterAction.findIndex(word => word === 'friendly' || word === 'enemy');
                 if (unitTypeIndex !== -1) {
-                    const foundAllegianceWord = wordsAfterAction[unitTypeIndex];
-                    //Once we detect the allegiance word we'll hard code this to either be friendly or enemy from here on out. To fit later logic which is looking for such.
-                    if (friendlyTerms.includes(foundAllegianceWord)) {
-                        unitType = 'friendly';
-                    } else if (enemyTerms.includes(foundAllegianceWord)) {
-                        unitType = 'enemy';
-                    } else {
-                        //This should never get here, as if it's not in friendlyTerms or enemyTerms it shouldn't get here but to the else statement below
-                        //but leaving it for safety. Because the instant you assume it won't get here, some radom edge case will pop up.
-                        console.log(`Unknown allegiance: ${foundAllegianceWord}`);
-                        statusMessage.textContent += ' (unknown ' + foundAllegianceWord + ' allegiance)';
-                        unitType = 'enemy'; // Default to enemy if not recognized
-                    }
+                    unitType = wordsAfterAction[unitTypeIndex];
                     // Remove the unit type from the array
                     wordsAfterAction.splice(unitTypeIndex, 1);
                 } else {
-                    // Default to enemy if not specified, normally I'd put a message here notifying we didn't find a 'allegiance'
-                    // but I think this is a common enough case we don't want to clutter the message.
+                    // Default to enemy if not specified
                     unitType = 'enemy';
                 }
 
                 // The remaining words should form the unit name
                 unitName = wordsAfterAction.join(' ');
+                
+                // Update the last command display
+                statusMessage.textContent = `Command: "${command}"`;
 
                 // Normalize the unit name to match the case in the data.
                 // First, check the name map for common phrases
@@ -651,21 +685,20 @@
                 }
             };
             
-            // --- EVENT LISTENERS ---
-            toggleButton.addEventListener('click', () => {
-                if (isListening) {
-                    stopVoiceRecognition();
-                } else {
-                    startVoiceRecognition();
-                }
-            });
+        // --- EVENT LISTENERS ---
+        toggleButton.addEventListener('click', () => {
+            if (isListening) {
+                stopVoiceRecognition();
+            } else {
+                startVoiceRecognition();
+            }
+        });
 
-            // Initial UI update
-            updateUnitsDisplay();
-            updateCounterCalculations();
-            renderRecommendations();
-            checkAerialAdvantage();
-        })();
-    </script>
+        // Initial UI updates
+        updateUnitsDisplay();
+        updateCounterCalculations();
+        renderRecommendations();
+    })();
+</script>		
 </body>
 </html>
