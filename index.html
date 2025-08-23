@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v1.6</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v1.7</span>
         
         <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
 
@@ -172,6 +172,8 @@
             // Map for handling common voice recognition misrecognitions or alternate names
             const nameMap = {
 				'of this': 'Abyss',
+                'a best': 'Abyss',
+                'abyss': 'Abyss',
                 'arc light': 'Arclight',
                 'arclights': 'Arclight',
                 'arc lights': 'Arclight',
@@ -184,6 +186,7 @@
                 'hand': 'Hounds',
                 'fangs': 'Fang',
                 'things': 'Fang',
+                'thing': 'Fang',
                 'marksmen': 'Marksman', // Added for irregular plural
                 'marskmans': 'Marksman', // Added for common typo
                 'mustangs': 'Mustang',
@@ -196,6 +199,9 @@
                 'void I': 'Void Eye',
                 'void i': 'Void Eye',
                 'sledgehammers': 'Sledgehammer',
+                'sledgehammer': 'Sledgehammer',
+                'sledge hammers': 'Sledgehammer',
+                'sledge hammer': 'Sledgehammer',
                 'stormcallers': 'Stormcaller',
                 'storm collars': 'Stormcaller',
                 'storm coller': 'Stormcaller',
@@ -237,6 +243,9 @@
                 'more factories': 'War Factory',
                 'wraths': 'Wrath'
             };
+
+            const friendlyTerms = ['friendly', 'friend', 'friends', 'our', 'ally', 'allied', 'my', 'me', 'us', 'team'];
+            const enemyTerms = ['enemy', 'enemies', 'enemy\'s', 'foe', 'opponent', 'their', 'them', 'opposing', 'opponent\'s', 'opponents'];
 
             let friendlyUnits = {}; // This object stores friendly units and their counts.
             let enemyUnits = {}; // This object stores enemy units and their counts.
@@ -460,13 +469,24 @@
                     console.log('Counters have been reset.');
                     return;
                 }
+
+                // Update the last command display
+                statusMessage.textContent = `Command: "${command}"`;
                 
                 // Check for action (add, remove)
                 action = commandWords[0];
-                if (action === 'ad') action = 'add'; // Handle common misrecognition
-                if (action === 'bad') action = 'add'; // Handle common misrecognition
-                if (action === 'had') action = 'add'; // Handle common misrecognition
-                if (action === 'i had') action = 'add'; // Handle common misrecognition
+                // Handle common misrecognitions for "add"
+                if (action === 'ad' || action === 'at' || action === 'bad' || action === 'had' || action === 'i had' || action === 'add') {
+                    action = 'add';
+                // Handle synonyms for removing a unit
+                } else if (action === 'remove' || action === 'delete' || action === 'subtract' || action === 'minus') {
+                    action = 'remove';  
+                // Default to add if no valid action is found, idea is this is the most common command
+                } else {
+                    console.log(`Unknown action: ${action}`);
+                    statusMessage.textContent += ' (' + action + ' unknown action)';
+                    action = 'add'; 
+                }
 
                 // Find the quantity and unit type
                 let wordsAfterAction = commandWords.slice(1);
@@ -485,21 +505,31 @@
 				}
 
                 // Look for unit type (friendly, enemy)
-                const unitTypeIndex = wordsAfterAction.findIndex(word => word === 'friendly' || word === 'enemy');
+                const unitTypeIndex = wordsAfterAction.findIndex(word => friendlyTerms.includes(word) || enemyTerms.includes(word));
                 if (unitTypeIndex !== -1) {
-                    unitType = wordsAfterAction[unitTypeIndex];
+                    const foundAllegianceWord = wordsAfterAction[unitTypeIndex];
+                    //Once we detect the allegiance word we'll hard code this to either be friendly or enemy from here on out. To fit later logic which is looking for such.
+                    if (friendlyTerms.includes(foundAllegianceWord)) {
+                        unitType = 'friendly';
+                    } else if (enemyTerms.includes(foundAllegianceWord)) {
+                        unitType = 'enemy';
+                    } else {
+                        //This should never get here, as if it's not in friendlyTerms or enemyTerms it shouldn't get here but to the else statement below
+                        //but leaving it for safety. Because the instant you assume it won't get here, some radom edge case will pop up.
+                        console.log(`Unknown allegiance: ${foundAllegianceWord}`);
+                        statusMessage.textContent += ' (unknown ' + foundAllegianceWord + ' allegiance)';
+                        unitType = 'enemy'; // Default to enemy if not recognized
+                    }
                     // Remove the unit type from the array
                     wordsAfterAction.splice(unitTypeIndex, 1);
                 } else {
-                    // Default to enemy if not specified
+                    // Default to enemy if not specified, normally I'd put a message here notifying we didn't find a 'allegiance'
+                    // but I think this is a common enough case we don't want to clutter the message.
                     unitType = 'enemy';
                 }
 
                 // The remaining words should form the unit name
                 unitName = wordsAfterAction.join(' ');
-                
-                // Update the last command display
-                statusMessage.textContent = `Command: "${command}"`;
 
                 // Normalize the unit name to match the case in the data.
                 // First, check the name map for common phrases
