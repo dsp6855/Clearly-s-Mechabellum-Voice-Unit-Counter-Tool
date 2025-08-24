@@ -587,6 +587,7 @@
                 let unitType = '';
                 let unitName = '';
                 let quantity = 1;
+                let commandSplice=1;    
 
                 // Handle the reset command first as a special case
                 if (commandLower.trim() === 'reset counters') {
@@ -603,7 +604,6 @@
 
                 // Update the last command display
                 statusMessage.textContent = `Command: "${command}"`;
-                
                 // Check for action (add, remove)
                 action = commandWords[0];
                 // Handle common misrecognitions for "add"
@@ -615,12 +615,14 @@
                 // Default to add if no valid action is found, idea is this is the most common command
                 } else {
                     console.log(`Unknown action: ${action}`);
+                    
                     statusMessage.textContent += ' (' + action + ' unknown action)';
                     action = 'add'; 
+                    commandSplice=0; // If no action word, don't remove the first word as it might be part of the unit name
                 }
 
                 // Find the quantity and unit type
-                let wordsAfterAction = commandWords.slice(1);
+                let wordsAfterAction = commandWords.slice(commandSplice);
                 
                 // Look for a number word or digit
                 const numberIndex = wordsAfterAction.findIndex(word => !isNaN(parseInt(word)) || numberWords[word]);
