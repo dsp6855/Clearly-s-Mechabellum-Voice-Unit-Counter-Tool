@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v2.5</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v2.6</span>
         
 <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
         <p class="text-center text-gray-400 mb-4">Try saying "add three friendly crawlers" or "reset counters"</p>
@@ -574,6 +574,10 @@
                     aerialWarning.classList.remove('hidden');
                 } else {
                     aerialWarning.classList.add('hidden');
+                }
+                // If enemy has no anti-air, point out that they are vulnerable to air units
+                if (!enemyAntiAirUnits) {
+                    statusMessage.innerHTML += ' <br><span class="text-yellow-400 text-xs">(Enemy has no anti-air, consider adding air units!)</span>';
                 }
             };
 
