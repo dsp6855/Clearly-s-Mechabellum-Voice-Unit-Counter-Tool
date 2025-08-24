@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v2.3</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v2.4</span>
         
         <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
 
@@ -189,6 +189,7 @@
 				'abyss': 'Abyss',
                 'abysses': 'Abyss',
                 'arc light': 'Arclight',
+                'arc lines': 'Arclight',
                 'arclights': 'Arclight',
                 'arc lights': 'Arclight',
                 'crawlers': 'Crawler',
@@ -356,79 +357,109 @@
              */
             const renderRecommendations = () => {
                 recommendationsList.innerHTML = ''; // Clear the list
-                
+
                 const enemyUnitNames = Object.keys(enemyUnits);
 
                 if (enemyUnitNames.length === 0) {
                     recommendationsList.innerHTML = '<li class="text-gray-400">Add enemy units to see counters.</li>';
-                } else {
+                    return;
+                }
+
+                // Create a mutable copy of friendly units to allocate as counters
+                const friendlyUnitsToAllocate = { ...friendlyUnits };
+
                 enemyUnitNames.forEach(enemyUnitName => {
                     const weaknesses = countersData[enemyUnitName]?.weakness || [];
-                    const isCountered = weaknesses.some(counter => friendlyUnits[counter] > 0);
+                    
+                    let friendlyCounterGroups = 0;
+                    const counteringUnits = {}; // Use an object to store counts
+                    
+                    // Find which friendly units are strong counters for this specific enemy unit
+                    const potentialCounters = weaknesses.filter(counter => friendlyUnitsToAllocate[counter] > 0);
+
+                    // Sort potential counters by number of groups (descending) to use larger groups first
+                    potentialCounters.sort((a, b) => friendlyUnitsToAllocate[b] - friendlyUnitsToAllocate[a]);
+
+                    // Allocate friendly units to counter this enemy unit, consuming them as they are used
+                    for (const counter of potentialCounters) {
+                        const groupsToAllocate = Math.min(friendlyUnitsToAllocate[counter], enemyUnits[enemyUnitName]);
+                        if (groupsToAllocate > 0) {
+                            friendlyCounterGroups += groupsToAllocate;
+                            counteringUnits[counter] = groupsToAllocate;
+                            friendlyUnitsToAllocate[counter] -= groupsToAllocate; // Reduce the available friendly units
+                        }
+                        if (friendlyCounterGroups >= enemyUnits[enemyUnitName]) {
+                            break; // Stop allocating once this enemy unit is fully countered
+                        }
+                    }
+
+                    const enemyGroups = enemyUnits[enemyUnitName] || 0;
+                    const isCountered = friendlyCounterGroups >= enemyGroups;
+                    
                     const li = document.createElement('li');
                     li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border');
+                    
                     let statusText = '';
                     let statusClass = '';
 
                     if (isCountered) {
                         statusText = 'Countered! ✅';
                         statusClass = 'bg-green-700 border-green-500';
-						// Find the friendly units that are countering this enemy unit
-						const counteringUnits = weaknesses.filter(counter => friendlyUnits[counter] > 0);
-
-						// Build the message string
-						const counteringMessage = counteringUnits.map(unitName => {
-							const quantity = friendlyUnits[unitName];
-							return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)}`
-						}).join(', ');
-
-						// Add a new paragraph or span to your list item to show the counters
-						const counterInfo = document.createElement('p');
-						counterInfo.classList.add('text-sm', 'text-gray-300', 'mt-1');
-						counterInfo.textContent = `Countered by: ${counteringMessage}`;
-						li.appendChild(counterInfo);
+                        // Build the message string for counters
+                        const counteringMessage = Object.keys(counteringUnits).map(unitName => {
+                            const quantity = counteringUnits[unitName];
+                            return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)}`;
+                        }).join(', ');
+                        
+                        const counterInfo = document.createElement('p');
+                        counterInfo.classList.add('text-sm', 'text-gray-300', 'mt-1');
+                        counterInfo.textContent = `Countered by: ${counteringMessage}`;
+                        li.appendChild(counterInfo);
                     } else {
                         statusText = 'Needs Counters ❌';
                         statusClass = 'bg-red-700 border-red-500';
+                        const neededGroups = enemyGroups - friendlyCounterGroups;
+                        
+                        // Only show recommendations for counters not already in friendly units
+                        const unownedCounters = weaknesses.filter(counter => !friendlyUnits[counter] || friendlyUnits[counter] === 0);
+                        unownedCounters.sort((a, b) => {
+                            const costA = mechData[a]?.cost || Infinity;
+                            const costB = mechData[b]?.cost || Infinity;
+                            return costA - costB;
+                        });
+                        
+                        // Display the required units to fully counter
+                        const counterList = document.createElement('ul');
+                        counterList.classList.add('list-disc', 'list-inside', 'text-gray-300', 'ml-4', 'mt-1');
+                        
+                        if (unownedCounters.length > 0) {
+                            const counterLi = document.createElement('li');
+                            counterLi.innerHTML = `You need **${neededGroups}** more counter groups. Consider purchasing:`;
+                            counterList.appendChild(counterLi);
+                            unownedCounters.forEach(counter => {
+                                const counterItemLi = document.createElement('li');
+                                const cost = mechData[counter]?.cost || 'N/A';
+                                counterItemLi.innerHTML = `${counter} (Cost: ${cost})`;
+                                counterList.appendChild(counterItemLi);
+                            });
+                        } else {
+                            const counterLi = document.createElement('li');
+                            counterLi.classList.add('text-gray-400', 'ml-4', 'italic', 'mt-1');
+                            counterLi.textContent = "You have the necessary units but need more groups.";
+                            counterList.appendChild(counterLi);
+                        }
+                        li.appendChild(counterList);
                     }
 
                     li.innerHTML = `
                         <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-white">${enemyUnitName.charAt(0).toUpperCase() + enemyUnitName.slice(1)}</span>
+                            <span class="font-bold text-white">${enemyUnitName.charAt(0).toUpperCase() + enemyUnitName.slice(1)} x${enemyGroups}</span>
                             <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${statusClass}">${statusText}</span>
                         </div>
+                        ${li.innerHTML}
                     `;
-
-                    // Only show counter recommendations if the unit is not yet countered
-                    if (!isCountered) {
-                        const unownedCounters = weaknesses.filter(counter => !friendlyUnits[counter] || friendlyUnits[counter] === 0);
-						// Sort the unownedCounters array by cost
-						unownedCounters.sort((a, b) => {
-							// Get the cost for unit 'a' and unit 'b'
-							const costA = mechData[a]?.cost || Infinity; // Use Infinity if cost is missing
-							const costB = mechData[b]?.cost || Infinity;
-							return costA - costB; // This sorts in ascending order (lowest cost first)
-						});
-                        if (unownedCounters.length > 0) {
-                            const counterList = document.createElement('ul');
-                            counterList.classList.add('list-disc', 'list-inside', 'text-gray-300', 'ml-4', 'mt-1');
-                            unownedCounters.forEach(counter => {
-                                const counterLi = document.createElement('li');
-                                const cost = mechData[counter]?.cost || 'N/A';
-                                counterLi.innerHTML = `${counter} (Cost: ${cost})`;
-                                counterList.appendChild(counterLi);
-                            });
-                            li.appendChild(counterList);
-                        } else {
-                            const counterLi = document.createElement('li');
-                            counterLi.classList.add('text-gray-400', 'ml-4', 'italic', 'mt-1');
-                            counterLi.textContent = "No recommended counters found.";
-                            li.appendChild(counterLi);
-                        }  
-                    }
                     recommendationsList.appendChild(li);
                 });
-				}
 
 				// --- Units to Avoid logic ---
 				const friendlyUnitNames = Object.keys(friendlyUnits);
