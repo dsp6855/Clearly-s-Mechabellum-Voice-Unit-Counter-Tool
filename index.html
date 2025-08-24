@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v2.2a</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v2.3</span>
         
         <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
 
@@ -134,37 +134,37 @@
             
             // This is the correct counters data, replacing the previous duplicate.
             const countersData = {
-                "Abyss": { "weakness": ["Marksman", "Mustang", "Wasp", "Melting Point"], "strong_counter": [] },
-                "Arclight": { "weakness": ["Stormcaller", "Steel Ball", "Rhino", "Scorpion", "Vulcan", "Overlord", "Melting Point", "Fortress", "War Factory"], "strong_counter": ["Crawler", "Hounds", "Steel Ball", "Fang", "Mustang"] },
-                "Crawler": { "weakness": ["Arclight", "Mustang", "Fire Badger", "Vulcan", "Sledgehammer", "Rhino", "Wraith"], "strong_counter": ["Fang", "Marksman", "Sabertooth", "Steel Ball", "Melting Point", "Hacker"] },
-                "Fang": { "weakness": ["Fire Badger", "Typhoon", "Mustang", "Steel Ball", "Wraith", "Rhino","Vulcan"], "strong_counter": ["Marksman", "Wasp", "Phoenix", "Overlord"] },
-                "Farseer": { "weakness": ["Rhino", "Melting Point", "Fortress", "War Factory"], "strong_counter": ["Marksman", "Hacker", "Phoenix", "Wraith", "Tarantula"] },
-                "Fire Badger": { "weakness": ["Rhino", "Fortress", "War Factory", "Sabertooth", "Overlord"], "strong_counter": ["Crawler", "Fang", "Arclight", "Mustang"] },
-                "Fortress": { "weakness": ["Fang", "Steel Ball", "Overlord", "Melting Point", "Sandworm"], "strong_counter": ["Sledgehammer", "Tarantula", "Vulcan", "Fire Badger", "Typhoon"] },
-                "Hacker": { "weakness": ["Fang", "Stormcaller", "War Factory", "Phoenix", "Crawler", "Overlord"], "strong_counter": ["Fire Badger", "Arclight", "Scorpion", "Sledgehammer", "Steel Ball"] },
-                "Hounds": { "weakness": ["Fire Badger", "Vulcan", "Overlord", "Arclight", "Melting Point", "Scorpion", "Sledgehammer", "Steel Ball", "Rhino", "Tarantula"], "strong_counter": ["Fang", "Mustang", "Wasp", "Phantom Ray", "Phoenix", "Farseer", "Raiden", "Wraith", "Hacker"] },
-                "Marksman": { "weakness": ["Crawler", "Fang", "Mustang", "War Factory", "Farseer"], "strong_counter": ["Arclight", "Hacker","Overlord", "Phoenix", "Wraith"] },
-                "Melting Point": { "weakness": ["Crawler", "Marksman", "Phoenix","Steel Ball"], "strong_counter": ["Scorpion", "Fortress", "Rhino", "Vulcan", "Typhoon", "Wraith"] },
-                "Mountain": { "weakness": ["Rhino", "Sledgehammer", "Scorpion", "Vulcan", "Overlord", "Melting Point", "Stormcaller", "Tarantula"], "strong_counter": ["Crawler", "Hounds", "Sabertooth", "Steel Ball", "Void Eye", "Sandworm"] },
-                "Mustang": { "weakness": ["Fang", "Arclight", "Rhino", "Wasp","Phoenix","Overlord","Farseer", "Tarantula"], "strong_counter": ["Crawler", "Vulcan", "Sledgehammer", "War Factory", "Typhoon", "Fire Badger"] },
-                "Overlord": { "weakness": ["Melting Point", "Phoenix", "Wasp", "Mustang"], "strong_counter": ["Rhino", "Steel Ball", "Sledgehammer", "Stormcaller", "Vulcan", "Arclight", "Hacker", "Scorpion", "Fire Badger", "Sabertooth", "Typhoon", "Wraith"] },
-                "Phantom Ray": { "weakness": ["Marksman", "Mustang", "Wasp", "Typhoon", "Phoenix", "Farseer", "Raiden", "Wraith"], "strong_counter": ["Arclight", "Fire Badger", "Fortress", "Melting Point", "Rhino", "Sabertooth", "Sandworm", "Scorpion", "Sledgehammer", "Steel Ball", "Stormcaller", "Tarantula", "Typhoon", "Vulcan", "War Factory", "Wraith"] },
-                "Phoenix": { "weakness": ["Mustang", "Fang", "Wasp", "Marksman", "Farseer"], "strong_counter": ["Overlord", "Stormcaller", "Vulcan", "Typhoon", "Sabertooth", "Fire Badger"] },
-                "Raiden": { "weakness": ["Farseer", "Marksman", "Melting Point", "Overlord", "Phoenix"], "strong_counter": ["Fire Badger", "Sledgehammer", "Steel Ball", "Stormcaller", "Wraith"] },
-                "Rhino": { "weakness": ["Steel Ball", "War Factory", "Phoenix", "Melting Point", "Hacker", "Overlord"], "strong_counter": ["Fire Badger", "Crawler", "Mustang", "Vulcan", "Stormcaller", "Marksman"] },
-                "Sabertooth": { "weakness": ["Crawler", "Fang", "Steel Ball", "Melting Point", "Fortress", "War Factory"], "strong_counter": ["Sledgehammer", "Tarantula", "Hacker", "Vulcan", "Typhoon", "Fire Badger", "Farseer"] },
-                "Sandworm": { "weakness": ["Melting Point", "War Factory", "Mountain"], "strong_counter": ["Crawler", "Hacker", "Hounds", "Marksman", "Melting Point", "Sabertooth", "Steel Ball", "Void Eye", "Fortress"] },
-                "Scorpion": { "weakness": ["Wasp", "Overlord", "Phoenix"], "strong_counter": ["Sledgehammer", "Tarantula", "Hacker", "Vulcan", "Fire Badger", "Typhoon", "War Factory"] },
-                "Sledgehammer": { "weakness": ["Phoenix", "Vulcan", "War Factory"], "strong_counter": ["Crawler", "Mustang", "Arclight"] },
-                "Steel Ball": { "weakness": ["Crawler", "Phoenix", "Overlord"], "strong_counter": ["Sledgehammer", "Tarantula", "Rhino", "Sandworm"] },
-                "Stormcaller": { "weakness": ["Marksman", "Arclight", "Mustang", "Vulcan", "Fortress", "Typhoon", "Fang", "Overlord"], "strong_counter": ["Rhino", "Sledgehammer", "War Factory"] },
-                "Tarantula": { "weakness": ["Steel Ball", "War Factory", "Stormcaller", "Fortress", "Marksman", "Melting Point", "Overlord", "Phoenix", "Farseer"], "strong_counter": ["Arclight", "Mustang", "Hacker"] },
-                "Typhoon": { "weakness": ["War Factory", "Steel Ball", "Scorpion", "Melting Point", "Phoenix", "Sabertooth", "Fortress"], "strong_counter": ["Mustang", "Wasp", "Crawler", "Fang", "Hounds", "Wraith"] },
-                "Void Eye": { "weakness": ["Crawler", "Melting Point", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Typhoon", "Vulcan"], "strong_counter": ["Hacker", "Hounds", "Marksman", "Sabertooth", "Stormcaller"] },
-                "Vulcan": { "weakness": ["Fortress", "Melting Point", "Overlord", "Phoenix", "Steel Ball"], "strong_counter": ["Crawler", "Arclight", "Marksman", "Mustang", "Sledgehammer"] },
-                "War Factory": { "weakness": ["Melting Point", "Scorpion", "Overlord"], "strong_counter": ["Arclight", "Stormcaller", "Sledgehammer", "Steel Ball", "Rhino", "Sabertooth", "Vulcan", "Typhoon", "Sandworm"] },
-                "Wasp": { "weakness": ["Mustang", "Fang", "Wraith"], "strong_counter": ["Marksman", "Phoenix", "Melting Point", "Overlord"] },
-                "Wraith": { "weakness": ["Typhoon", "Phantom Ray", "Raiden", "Melting Point", "Overlord"], "strong_counter": ["Crawler", "Mustang", "Arclight", "Sledgehammer", "Steel Ball", "Rhino", "Fang"] }
+                "Abyss": { "weakness": ["Marksman", "Melting Point", "Mustang", "Wasp"], "strong_counter": [] },
+                "Arclight": { "weakness": ["Fortress", "Melting Point", "Overlord", "Rhino", "Scorpion", "Steel Ball", "Stormcaller", "Vulcan", "War Factory"], "strong_counter": ["Crawler", "Hounds", "Mustang", "Stormcaller"] },
+                "Crawler": { "weakness": ["Arclight", "Fire Badger", "Mustang", "Rhino", "Sledgehammer", "Vulcan", "Wraith"], "strong_counter": ["Hacker", "Marksman", "Melting Point", "Sabertooth", "Steel Ball", "Void Eye"] },
+                "Fang": { "weakness": ["Fire Badger", "Mustang", "Rhino", "Steel Ball", "Typhoon", "Vulcan", "Wraith"], "strong_counter": ["Fortress", "Hacker", "Marksman", "Mustang", "Phoenix", "Sabertooth", "Stormcaller", "Wasp"] },
+                "Farseer": { "weakness": ["Fortress", "Melting Point", "Rhino", "War Factory"], "strong_counter": ["Marksman", "Mustang", "Phantom Ray", "Phoenix", "Raiden", "Tarantula"] },
+                "Fire Badger": { "weakness": ["Fortress", "Overlord", "Rhino", "Sabertooth", "War Factory"], "strong_counter": ["Crawler", "Fang", "Hounds"] },
+                "Fortress": { "weakness": ["Fang", "Melting Point", "Overlord", "Sandworm", "Steel Ball"], "strong_counter": ["Arclight", "Farseer", "Fire Badger", "Sabertooth", "Stormcaller", "Tarantula", "Typhoon", "Vulcan"] },
+                "Hacker": { "weakness": ["Crawler", "Fang", "Overlord", "Phoenix", "Stormcaller", "War Factory"], "strong_counter": ["Rhino"] },
+                "Hounds": { "weakness": ["Arclight", "Fire Badger", "Melting Point", "Overlord", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Vulcan"], "strong_counter": [] },
+                "Marksman": { "weakness": ["Crawler", "Fang", "Farseer", "Mustang", "War Factory"], "strong_counter": ["Abyss", "Melting Point", "Phantom Ray", "Phoenix", "Raiden", "Stormcaller", "Tarantula"] },
+                "Melting Point": { "weakness": ["Crawler", "Marksman", "Phoenix", "Steel Ball"], "strong_counter": ["Abyss", "Arclight", "Farseer", "Fortress", "Hounds", "Mountain", "Overlord", "Raiden", "Rhino", "Sabertooth", "Sandworm", "Tarantula", "Typhoon", "Void Eye", "Vulcan", "War Factory", "Wraith"] },
+                "Mountain": { "weakness": ["Melting Point", "Overlord", "Rhino", "Scorpion", "Sledgehammer", "Stormcaller", "Tarantula", "Vulcan"], "strong_counter": ["Sandworm"] },
+                "Mustang": { "weakness": ["Arclight", "Fang", "Farseer", "Overlord", "Phoenix", "Rhino", "Tarantula", "Wasp"], "strong_counter": ["Abyss", "Crawler", "Fang", "Marksman", "Overlord", "Phantom Ray", "Phoenix", "Stormcaller", "Wasp"] },
+                "Overlord": { "weakness": ["Melting Point", "Mustang", "Phoenix", "Wasp"], "strong_counter": ["Arclight", "Fire Badger", "Fortress", "Hacker", "Hounds", "Mountain", "Mustang", "Raiden", "Rhino", "Scorpion", "Steel Ball", "Sledgehammer", "Stormcaller", "Tarantula", "Vulcan", "War Factory", "Wraith"] },
+                "Phantom Ray": { "weakness": ["Farseer", "Marksman", "Mustang", "Phoenix", "Raiden", "Typhoon", "Wasp", "Wraith"], "strong_counter": ["Wraith"] },
+                "Phoenix": { "weakness": ["Fang", "Farseer", "Marksman", "Mustang", "Wasp"], "strong_counter": ["Hacker", "Melting Point", "Mustang", "Overlord", "Phantom Ray", "Raiden", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Typhoon", "Vulcan"] },
+                "Raiden": { "weakness": ["Farseer", "Marksman", "Melting Point", "Overlord", "Phoenix"], "strong_counter": ["Phantom Ray", "Wraith"] },
+                "Rhino": { "weakness": ["Hacker", "Melting Point", "Overlord", "Phoenix", "Steel Ball", "War Factory"], "strong_counter": ["Arclight", "Crawler", "Fang", "Farseer", "Fire Badger", "Hounds", "Mountain", "Mustang", "Void Eye"] },
+                "Sabertooth": { "weakness": ["Crawler", "Fang", "Fortress", "Melting Point", "Steel Ball", "War Factory"], "strong_counter": ["Fire Badger", "Typhoon"] },
+                "Sandworm": { "weakness": ["Melting Point", "Mountain", "War Factory"], "strong_counter": ["Fortress"] },
+                "Scorpion": { "weakness": ["Overlord", "Phoenix", "Wasp"], "strong_counter": ["Arclight", "Hounds", "Mountain", "Typhoon", "Void Eye", "War Factory"] },
+                "Sledgehammer": { "weakness": ["Phoenix", "Vulcan", "War Factory"], "strong_counter": ["Crawler", "Hounds", "Mountain", "Void Eye"] },
+                "Steel Ball": { "weakness": ["Crawler", "Overlord", "Phoenix"], "strong_counter": ["Arclight", "Fang", "Fortress", "Hounds", "Melting Point", "Rhino", "Sabertooth", "Tarantula", "Typhoon", "Void Eye", "Vulcan"] },
+                "Stormcaller": { "weakness": ["Arclight", "Fang", "Fortress", "Marksman", "Mustang", "Overlord", "Typhoon", "Vulcan"], "strong_counter": ["Arclight", "Hacker", "Mountain", "Tarantula"] },
+                "Tarantula": { "weakness": ["Farseer", "Fortress", "Marksman", "Melting Point", "Overlord", "Phoenix", "Steel Ball", "Stormcaller", "War Factory"], "strong_counter": ["Hounds", "Mountain", "Mustang", "Void Eye"] },
+                "Typhoon": { "weakness": ["Fortress", "Melting Point", "Phoenix", "Sabertooth", "Scorpion", "Steel Ball", "War Factory"], "strong_counter": ["Fang", "Phantom Ray", "Stormcaller", "Void Eye", "Wraith"] },
+                "Void Eye": { "weakness": ["Crawler", "Melting Point", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Typhoon", "Vulcan"], "strong_counter": [] },
+                "Vulcan": { "weakness": ["Fortress", "Melting Point", "Overlord", "Phoenix", "Steel Ball"], "strong_counter": ["Arclight", "Crawler", "Fang", "Hounds", "Mountain", "Sledgehammer", "Stormcaller", "Void Eye"] },
+                "War Factory": { "weakness": ["Melting Point", "Overlord", "Scorpion"], "strong_counter": ["Arclight", "Farseer", "Fire Badger", "Hacker", "Marksman", "Rhino", "Sabertooth", "Sandworm", "Sledgehammer", "Tarantula", "Typhoon"] },
+                "Wasp": { "weakness": ["Fang", "Mustang", "Wraith"], "strong_counter": ["Abyss", "Mustang", "Overlord", "Phantom Ray", "Phoenix", "Scorpion"] },
+                "Wraith": { "weakness": ["Melting Point", "Overlord", "Phantom Ray", "Raiden", "Typhoon"], "strong_counter": ["Crawler", "Fang", "Phantom Ray", "Wasp"] }
             };
             
             // This loop adds each unit to its own weakness array for complete counter logic.
