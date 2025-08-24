@@ -275,7 +275,7 @@
 
             const friendlyTerms = ['friendly', 'friend', 'friends', 'our', 'ally', 'allied', 'my', 'me', 'us', 'team'];
             const enemyTerms = ['enemy', 'enemies', 'enemy\'s', 'foe', 'opponent', 'their', 'them', 'opposing', 'opponent\'s', 'opponents'];
-            const addTerms = ['ad', 'at', 'bad', 'had', 'i had', 'add', 'give']
+            const addTerms = ['ad', 'at', 'bad', 'had', 'i had', 'add', 'give']; //i had being two words is handled at processCommand function.
             const removeTerms = ['remove', 'delete', 'subtract', 'minus', '-', 'take', 'less'];
 
             // --- STATE ---
@@ -355,6 +355,7 @@
                 enemyUnitsTitle.textContent = `Enemy Units: ${enemyUnitGroupsTotal}`;
             };
             
+            /**
             /**
              * Renders a list of counter recommendations based on the enemy units, sorted by effectiveness and cost.
              */
@@ -464,78 +465,87 @@
                     recommendationsList.appendChild(li);
                 });
 
-				// --- Units to Avoid logic ---
-				const friendlyUnitNames = Object.keys(friendlyUnits);
-				if (friendlyUnitNames.length === 0) {
-					avoidUnitsList.innerHTML = '<li class="text-gray-400">Add friendly units to see which to avoid.</li>';
-				} else {
-					const unitsToAvoid = {};
-					friendlyUnitNames.forEach(friendlyUnitName => {
-						Object.keys(enemyUnits).forEach(enemyUnitName => {
-							const enemyWeaknesses = countersData[enemyUnitName]?.weakness || [];
-							if (enemyWeaknesses.includes(friendlyUnitName)) {
-								if (!unitsToAvoid[friendlyUnitName]) {
-									unitsToAvoid[friendlyUnitName] = [];
-								}
-								if (!unitsToAvoid[friendlyUnitName].includes(enemyUnitName)) {
-									unitsToAvoid[friendlyUnitName].push(enemyUnitName);
-								}
-							}
-						});
-					});
-					if (Object.keys(unitsToAvoid).length === 0) {
-						avoidUnitsList.innerHTML = '<li class="text-gray-400">No friendly units are weak against enemy units.</li>';
-					} else {
-						avoidUnitsList.innerHTML = '';
-						for (const unitToAvoid in unitsToAvoid) {
-							const li = document.createElement('li');
-							li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
-							const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
-							li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
-							avoidUnitsList.appendChild(li);
-						}
-					}
-				}
-				
-				// --- New section for "Units to Avoid Purchasing" ---
-				
-				// Get all possible units from your countersData object
-				const allUnits = Object.keys(countersData);
-				const unitsToAvoidPurchasing = {};
+                // --- "Units to Avoid" section ---
+                const friendlyUnitNames = Object.keys(friendlyUnits);
 
-				if (enemyUnitNames.length > 0) {
-					// Iterate through all possible units to see which are weak to the current enemy units
-					allUnits.forEach(unitName => {
-						const unitWeaknesses = countersData[unitName]?.weakness || [];
-						Object.keys(enemyUnits).forEach(enemyUnitName => {
-							if (unitWeaknesses.includes(enemyUnitName)) {
-								if (!unitsToAvoidPurchasing[unitName]) {
-									unitsToAvoidPurchasing[unitName] = [];
-								}
-								if (!unitsToAvoidPurchasing[unitName].includes(enemyUnitName)) {
-									unitsToAvoidPurchasing[unitName].push(enemyUnitName);
-								}
-							}
-						});
-					});
-				}
+                if (friendlyUnitNames.length === 0) {
+                    avoidUnitsList.innerHTML = '<li class="text-gray-400">Add friendly units to see which to avoid.</li>';
+                } else {
+                    const unitsToAvoid = {};
+                    friendlyUnitNames.forEach(friendlyUnitName => {
+                        Object.keys(enemyUnits).forEach(enemyUnitName => {
+                            const enemyWeaknesses = countersData[enemyUnitName]?.weakness || [];
+                            if (enemyWeaknesses.includes(friendlyUnitName)) {
+                                if (!unitsToAvoid[friendlyUnitName]) {
+                                    unitsToAvoid[friendlyUnitName] = [];
+                                }
+                                if (!unitsToAvoid[friendlyUnitName].includes(enemyUnitName)) {
+                                    unitsToAvoid[friendlyUnitName].push(enemyUnitName);
+                                }
+                            }
+                        });
+                    });
+                    if (Object.keys(unitsToAvoid).length === 0) {
+                        avoidUnitsList.innerHTML = '<li class="text-gray-400">No friendly units are weak against enemy units.</li>';
+                    } else {
+                        const sortedUnitsToAvoid = Object.keys(unitsToAvoid).sort((a, b) => {
+                            return unitsToAvoid[b].length - unitsToAvoid[a].length;
+                        });
+                        
+                        const maxCounters = unitsToAvoid[sortedUnitsToAvoid[0]].length;
+                        const mostCounteredUnits = sortedUnitsToAvoid.filter(unit => unitsToAvoid[unit].length === maxCounters);
 
-				const avoidPurchasingList = document.getElementById('avoid-purchasing-list');
-				
-				if (Object.keys(unitsToAvoidPurchasing).length === 0) {
-					avoidPurchasingList.innerHTML = '<li class="text-gray-400">No units to avoid purchasing against this enemy composition.</li>';
-				} else {
-					avoidPurchasingList.innerHTML = '';
-					for (const unitToAvoid in unitsToAvoidPurchasing) {
-						const li = document.createElement('li');
-						li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
-						const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
-						li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
-						avoidPurchasingList.appendChild(li);
-					}
-				}
+                        avoidUnitsList.innerHTML = '';
+                        mostCounteredUnits.forEach(unitToAvoid => {
+                            const li = document.createElement('li');
+                            li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+                            const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
+                            li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
+                            avoidUnitsList.appendChild(li);
+                        });
+                    }
+                }
+
+                // --- New section for "Units to Avoid Purchasing" ---
+                const allUnits = Object.keys(countersData);
+                const unitsToAvoidPurchasing = {};
+                if (enemyUnitNames.length > 0) {
+                    allUnits.forEach(unitName => {
+                        const unitWeaknesses = countersData[unitName]?.weakness || [];
+                        Object.keys(enemyUnits).forEach(enemyUnitName => {
+                            if (unitWeaknesses.includes(enemyUnitName)) {
+                                if (!unitsToAvoidPurchasing[unitName]) {
+                                    unitsToAvoidPurchasing[unitName] = [];
+                                }
+                                if (!unitsToAvoidPurchasing[unitName].includes(enemyUnitName)) {
+                                    unitsToAvoidPurchasing[unitName].push(enemyUnitName);
+                                }
+                            }
+                        });
+                    });
+                }
+
+                const avoidPurchasingList = document.getElementById('avoid-purchasing-list');
+                
+                if (Object.keys(unitsToAvoidPurchasing).length === 0) {
+                    avoidPurchasingList.innerHTML = '<li class="text-gray-400">No units to avoid purchasing against this enemy composition.</li>';
+                } else {
+                    avoidPurchasingList.innerHTML = '';
+                    const sortedAvoidPurchasing = Object.keys(unitsToAvoidPurchasing).sort((a, b) => {
+                        const costA = mechData[a]?.cost || Infinity;
+                        const costB = mechData[b]?.cost || Infinity;
+                        return unitsToAvoidPurchasing[b].length - unitsToAvoidPurchasing[a].length;
+                    });
+                    
+                    sortedAvoidPurchasing.forEach(unitToAvoid => {
+                        const li = document.createElement('li');
+                        li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+                        const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
+                        li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
+                        avoidPurchasingList.appendChild(li);
+                    });
+                }
             };
-
             /**
              * Checks for an aerial advantage and displays a warning banner.
              */
@@ -612,9 +622,15 @@
                 statusMessage.textContent = `Command: "${command}"`;
                 // Check for action (add, remove)
                 action = commandWords[0];
+                if (action==='i') { action += ' ' + commandWords[1]; } // Handle "I had" case 
                 // Handle common misrecognitions for "add"
                 if (addTerms.includes(action)) {
                     action = 'add';
+                    // splice off 2 words if the action is "i had"
+                    if (commandWords[0].toLowerCase()==='i' && commandWords[1].toLowerCase()==='had') {
+                        commandSplice=2; // If the action word is actually two words, remove both from the unit name search
+                        action = 'add';
+                 }
                 // Handle synonyms for removing a unit
                 } else if (removeTerms.includes(action)) {
                     action = 'remove';  
