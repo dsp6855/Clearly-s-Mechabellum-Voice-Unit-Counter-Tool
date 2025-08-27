@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v3.1a</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.0</span>
         
 <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
         <p class="text-center text-gray-400 mb-4">Try saying "add three friendly crawlers" or "reset counters"</p>
@@ -42,7 +42,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
             <div class="bg-red-700 p-1 rounded-lg shadow-inner flex flex-col text-white">
-                <h2 id="enemy-units-title" class="text-large font-semibold mb-0 text-center">Enemy Units: 0</h2>
+                <h2 id="enemy-units-title" class="text-large mb-0 text-center">Enemy Units: 0</h2>
                 <div class="text-[10px] text-gray-400 mb-0 text-center">
                     <span id="enemy-chaff-count">Chaff: 0</span> | <span id="enemy-chaff-clear-count">Chaff Clear: 0</span>
                 </div>
@@ -52,7 +52,7 @@
             </div>
 
             <div class="bg-green-700 p-1 rounded-lg shadow-inner flex flex-col text-white">
-                <h2 id="friendly-units-title" class="text-large font-semibold mb-0 text-center">Friendly Units: 0</h2>
+                <h2 id="friendly-units-title" class="text-large mb-0 text-center">Friendly Units: 0</h2>
                 <div class="text-[10px] text-gray-400 mb-0 text-center">
                     <span id="friendly-chaff-count">Chaff: 0</span> | <span id="friendly-chaff-clear-count">Chaff Clear: 0</span>
                 </div>
@@ -63,7 +63,7 @@
 
             <!-- Counter Recommendations Section -->
             <div class="bg-gray-700 p-1 rounded-lg shadow-inner mb-1">
-                <h2 class="text-large font-semibold mb-1 text-orange-400">Counter Recommendations ⚔️</h2>
+                <h2 class="text-large mb-1 text-orange-400">Counter Recommendations ⚔️</h2>
                 <ul id="recommendations-list" class="list-disc pl-5 space-y-1 flex-grow text-sm">
 
                     <li class="text-gray-400">Add enemy units to see counters.</li>
@@ -72,14 +72,14 @@
             
             <!-- Synergies Recommendations Section -->
             <div id="synergy-recommendations-section" class="bg-gray-700 p-1 rounded-lg shadow-inner mb-1">
-                <h2 class="text-large font-semibold mb-1 text-purple-400">Synergy Recommendations ✨</h2>
+                <h2 class="text-large mb-1 text-purple-400">Synergy Recommendations ✨</h2>
                 <ul id="synergy-recommendations-list" class="list-disc pl-5 space-y-1 flex-grow text-sm">
                     <li class="text-gray-400">Add friendly units to see synergies.</li>
                 </ul>
             </div>
 
             <div class="bg-red-700 p-1 rounded-lg shadow-inner flex flex-col text-white">
-			<h3 class="text-sm font-bold mb-1 text-white">Units to Avoid Purchasing 💸</h3>
+			<h3 class="text-sm mb-1 text-white">Units to Avoid Purchasing 💸</h3>
 			    <ul id="avoid-purchasing-list" class="list-disc pl-5 space-y-1 flex-grow text-sm">
                     <li class="text-gray-400">Add enemy units to see counters.</li>
 			</ul>
@@ -87,13 +87,47 @@
 
 		<!-- Units to Avoid -->
         <div class="bg-gray-700 p-1 rounded-lg shadow-inner flex flex-col text-white">
-			<h2 class="text-sm font-semibold text-white mb-1">Your Units Being Countered</h2>
+			<h2 class="text-sm text-white mb-1">Your Units Being Countered</h2>
 			<ul id="avoid-units-list" class="list-disc pl-5 space-y-2 text-sm">
 				<li class="text-gray-400">Add friendly units to see what is being countered.</li>
 			</ul>
 		</div>
     </div>
         <!-- Footer -->
+       <!-- Icon Legend -->
+        <!-- New Boxed Icon Legend for Footer -->
+        <div class="bg-gray-700 p-0 rounded-xl mt-4">
+            <h3 class="text-center text-gray-300 mb-0 text-[10px] sm:text-xs">Icon Legend (relative to enemy units)</h3>
+            <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[10px] sm:text-xs">
+                <div class="flex items-center space-x-0.5">
+                    <span class="text-xs">🎯</span>
+                    <span>Ranged vs. Melee</span>
+                </div>
+                <div class="flex items-center space-x-0.5">
+                    <span class="text-xs">⬆️</span>
+                    <span>Longer Range</span>
+                </div>
+                <div class="flex items-center space-x-0.5">
+                    <span class="text-xs">⬇️</span>
+                    <span>Shorter Range</span>
+                </div>
+                <div class="flex items-center space-x-0.5">
+                    <span class="text-xs">↔️</span>
+                    <span>Same Range</span>
+                </div>
+                <div class="flex items-center space-x-0.5">
+                    <span class="text-xs">🔥</span>
+                    <span>Melee vs. Ranged</span>
+                </div>
+                <div class="flex items-center space-x-0.5">
+                    <span class="text-xs">⚔️</span>
+                    <span>Melee vs. Melee</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+         
     <div class="mt-8 text-center text-gray-400 text-xs">
         <p>&copy; 2025 Clearly Misunderstood  || 
         Code available on <a href="https://github.com/dsp6855/Clearly-s-Mechabellum-Voice-Unit-Counter-Tool/tree/main" class="text-indigo-400 hover:underline">GitHub</a></p>
@@ -117,37 +151,37 @@
             // --- DATA ---
             // A mock mechData object with a "unitCount" and "cost" property.
             const mechData = {
-                "Abyss": { "category": ["titan", "air", "ranged", "splash"], "descriptions": "Titan, air, late game, single unit, 100 range, splash, targets air and ground, upkeep cost", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 800 },
-                "Arclight": { "category": ["medium", "ground", "ranged", "splash","chaff clear"], "descriptions": "Medium, ground, anti-swarm, can do anti-air, single unit, splash, 93 range", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 100 },
-                "Crawler": { "category": ["light", "ground", "melee","chaff"], "descriptions": "light, melee, ground, attacks ground only, 24 units, high speed", "unitCount": 24, "isAirUnit": false, "targets": ["ground"], "cost": 100 },
-                "Fang": { "category": ["light", "ground", "ranged","chaff"], "descriptions": "light, ground, all-purpose, 18 units, 75 range, targets air and ground, can hide, high speed", "unitCount": 18, "isAirUnit": false, "targets": ["air", "ground"], "cost": 100 },
-                "Farseer": { "category": ["large", "ground", "ranged", "splash"], "descriptions": "large, high speed, splash, 125 range, attack air and ground, single unit, rocket", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "cost": 300 },
-                "Fire Badger": { "category": ["medium", "ground", "ranged", "splash","chaff clear"], "descriptions": "medium, anti-swarm tank, splash, 60 range, targets ground only, 3 units", "unitCount": 3, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Fortress": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, high damage, rocket, ground only target, 100 range, splash, slow, high hp, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 400 },
-                "Hacker": { "category": ["medium", "ground", "special", "ranged"], "descriptions": "hacker, ground, disables tech, 110 range, high speed", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Hounds": { "category": ["light", "ground", "ranged", "splash","chaff"], "descriptions": "high-speed, anti-unit, ground only, 70 range, 5 units", "unitCount": 5, "isAirUnit": false, "targets": ["ground"], "cost": 100 },
-                "Marksman": { "category": ["light", "ground", "ranged","carry"], "descriptions": "light, anti-air, targets air and ground, 140 range, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "cost": 100 },
-                "Melting Point": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "heavy, ground, anti-armor, flame, 115 range, large splash, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "cost": 400 },
-                "Mountain": { "category": ["titan", "ground", "ranged", "splash"], "descriptions": "giant, high hp, slow, ranged, 100 range, target ground only, 1 units", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 800 },
-                "Mustang": { "category": ["light", "ground", "ranged","chaff"], "descriptions": "light, mobile, anti-air, targets air and ground, 95 range, 12 units", "unitCount": 12, "isAirUnit": false, "targets": ["air", "ground"], "cost": 200 },
-                "Overlord": { "category": ["giant", "air", "ranged", "splash","carry"], "descriptions": "giant, anti-swarm, fire, 120 range, splash, single unit, high hp, fast", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 500 },
-                "Phantom Ray": { "category": ["medium", "air", "ranged", "splash"], "descriptions": "light, air, 65 range, high speed, single unit, splash, targets air and ground, low hp", "unitCount": 3, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
-                "Phoenix": { "category": ["medium", "air", "ranged", "splash","carry"], "descriptions": "medium, air, 120 range, targets air and ground, 2 units, splash, high speed", "unitCount": 2, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
-                "Raiden": { "category": ["giant", "air", "ranged"], "descriptions": "heavy, ground, 110 range, single unit, targets air and ground, rocket", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 400 },
-                "Rhino": { "category": ["heavy", "ground", "melee", "splash"], "descriptions": "heavy, high hp, ground, anti-armor, single unit, splash", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Sabertooth": { "category": ["heavy", "ground", "ranged"], "descriptions": "heavy, 90 range, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Sandworm": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, ground, splash, single unit, burrow. Can attack air with tech upgrade.", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 400 },
-                "Scorpion": { "category": ["heavy", "ground", "ranged", "splash","carry"], "descriptions": "heavy, anti-swarm, big splsh, high damage, slow speed, target ground only, single unit, 100 range", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 300 },
-                "Sledgehammer": { "category": ["heavy", "ground", "ranged", "splash","carry"], "descriptions": "Heavy Tank, ranged, ground target, splash, slow, 95 range, 5 units", "unitCount": 5, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Steel Ball": { "category": ["medium", "ground", "ranged"], "descriptions": "high-speed, anti-unit, ground only 45 range, attack grows longer attacking, 4 units", "unitCount": 4, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Stormcaller": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy rocket launcher, target ground only, splash, 180 range, 4 units, rockets", "unitCount": 4, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Tarantula": { "category": ["heavy", "ground", "ranged", "splash","chaff clear"], "descriptions": "heavy, splash, 80 range, fast attack, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 200 },
-                "Typhoon": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy, all purpose, splash, quick attack, 100 range, targets air and ground, 2 units", "unitCount": 2, "isAirUnit": false, "targets": ["air", "ground"], "cost": 300 },
-                "Void Eye": { "category": ["light", "ground", "special", "ranged"], "descriptions": "light, high damage, 100 range, target ground only, 3 units. Can attack air with tech upgrade.", "unitCount": 3, "isAirUnit": false, "targets": ["ground"], "cost": 100 },
-                "Vulcan": { "category": ["giant", "ground", "ranged", "splash","chaff clear"], "descriptions": "giant, anti-swarm, fire, large spash, 95 range,target ground only, single unit, high hp", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 400 },
-                "War Factory": { "category": ["titan", "ground", "ranged", "splash"<"chaff clear"], "descriptions": "titan, produces other units, high hp, expensive, 100 range, targets ground only, splash, slow, upkeep cost", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "cost": 800 },
-                "Wasp": { "category": ["light", "air", "ranged","chaff"], "descriptions": "light, air, 12 units, 50 range, high speed, targets air and ground, low HP", "unitCount": 12, "isAirUnit": true, "targets": ["air", "ground"], "cost": 200 },
-                "Wraith": { "category": ["heavy", "air", "ranged", "splash","chaff clear"], "descriptions": "heavy, air, single unit, 60 range, splash", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "cost": 300 }
+                "Abyss": { "category": ["titan", "air", "ranged", "splash"], "descriptions": "Titan, air, late game, single unit, 100 range, splash, targets air and ground, upkeep cost", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "range":100, "cost": 800 },
+                "Arclight": { "category": ["medium", "ground", "ranged", "splash","chaff clear"], "descriptions": "Medium, ground, anti-swarm, can do anti-air, single unit, splash, 93 range", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":93, "cost": 100 },
+                "Crawler": { "category": ["light", "ground", "melee","chaff"], "descriptions": "light, melee, ground, attacks ground only, 24 units, high speed", "unitCount": 24, "isAirUnit": false, "targets": ["ground"], "range":0, "cost": 100 },
+                "Fang": { "category": ["light", "ground", "ranged","chaff"], "descriptions": "light, ground, all-purpose, 18 units, 75 range, targets air and ground, can hide, high speed", "unitCount": 18, "isAirUnit": false, "targets": ["air", "ground"], "range":75, "cost": 100 },
+                "Farseer": { "category": ["large", "ground", "ranged", "splash"], "descriptions": "large, high speed, splash, 125 range, attack air and ground, single unit, rocket", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "range":125, "cost": 300 },
+                "Fire Badger": { "category": ["medium", "ground", "ranged", "splash","chaff clear"], "descriptions": "medium, anti-swarm tank, splash, 60 range, targets ground only, 3 units", "unitCount": 3, "isAirUnit": false, "targets": ["ground"], "range":60, "cost": 200 },
+                "Fortress": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, high damage, rocket, ground only target, 100 range, splash, slow, high hp, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":100, "cost": 400 },
+                "Hacker": { "category": ["medium", "ground", "special", "ranged"], "descriptions": "hacker, ground, disables tech, 110 range, high speed", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":70, "cost": 200 },
+                "Hounds": { "category": ["light", "ground", "ranged", "splash","chaff"], "descriptions": "high-speed, anti-unit, ground only, 70 range, 5 units", "unitCount": 5, "isAirUnit": false, "targets": ["ground"], "range":140, "cost": 100 },
+                "Marksman": { "category": ["light", "ground", "ranged","carry"], "descriptions": "light, anti-air, targets air and ground, 140 range, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "range":115, "cost": 100 },
+                "Melting Point": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "heavy, ground, anti-armor, flame, 115 range, large splash, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["air", "ground"], "range":100, "cost": 400 },
+                "Mountain": { "category": ["titan", "ground", "ranged", "splash"], "descriptions": "giant, high hp, slow, ranged, 100 range, target ground only, 1 units", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":100, "cost": 800 },
+                "Mustang": { "category": ["light", "ground", "ranged","chaff"], "descriptions": "light, mobile, anti-air, targets air and ground, 95 range, 12 units", "unitCount": 12, "isAirUnit": false, "targets": ["air", "ground"], "range":95, "cost": 200 },
+                "Overlord": { "category": ["giant", "air", "ranged", "splash","carry"], "descriptions": "giant, anti-swarm, fire, 120 range, splash, single unit, high hp, fast", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "range":120, "cost": 500 },
+                "Phantom Ray": { "category": ["medium", "air", "ranged", "splash"], "descriptions": "light, air, 65 range, high speed, single unit, splash, targets air and ground, low hp", "unitCount": 3, "isAirUnit": true, "targets": ["air", "ground"], "range":65, "cost": 200 },
+                "Phoenix": { "category": ["medium", "air", "ranged", "splash","carry"], "descriptions": "medium, air, 120 range, targets air and ground, 2 units, splash, high speed", "unitCount": 2, "isAirUnit": true, "targets": ["air", "ground"], "range":110, "cost": 200 },
+                "Raiden": { "category": ["giant", "air", "ranged"], "descriptions": "heavy, ground, 110 range, single unit, targets air and ground, rocket", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "range":110, "cost": 400 },
+                "Rhino": { "category": ["heavy", "ground", "melee", "splash"], "descriptions": "heavy, high hp, ground, anti-armor, single unit, splash", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":0, "cost": 200 },
+                "Sabertooth": { "category": ["heavy", "ground", "ranged"], "descriptions": "heavy, 90 range, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":90, "cost": 200 },
+                "Sandworm": { "category": ["giant", "ground", "ranged", "splash"], "descriptions": "giant, ground, splash, single unit, burrow. Can attack air with tech upgrade.", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":0, "cost": 400 },
+                "Scorpion": { "category": ["heavy", "ground", "ranged", "splash","carry"], "descriptions": "heavy, anti-swarm, big splsh, high damage, slow speed, target ground only, single unit, 100 range", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":100, "cost": 300 },
+                "Sledgehammer": { "category": ["heavy", "ground", "ranged", "splash","carry"], "descriptions": "Heavy Tank, ranged, ground target, splash, slow, 95 range, 5 units", "unitCount": 5, "isAirUnit": false, "targets": ["ground"], "range":95, "cost": 200 },
+                "Steel Ball": { "category": ["medium", "ground", "ranged"], "descriptions": "high-speed, anti-unit, ground only 45 range, attack grows longer attacking, 4 units", "unitCount": 4, "isAirUnit": false, "targets": ["ground"], "range":45, "cost": 200 },
+                "Stormcaller": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy rocket launcher, target ground only, splash, 180 range, 4 units, rockets", "unitCount": 4, "isAirUnit": false, "targets": ["ground"], "range":180, "cost": 200 },
+                "Tarantula": { "category": ["heavy", "ground", "ranged", "splash","chaff clear"], "descriptions": "heavy, splash, 80 range, fast attack, single unit", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":100, "cost": 200 },
+                "Typhoon": { "category": ["heavy", "ground", "ranged", "splash"], "descriptions": "heavy, all purpose, splash, quick attack, 100 range, targets air and ground, 2 units", "unitCount": 2, "isAirUnit": false, "targets": ["air", "ground"], "range":100, "cost": 300 },
+                "Void Eye": { "category": ["light", "ground", "special", "ranged"], "descriptions": "light, high damage, 100 range, target ground only, 3 units. Can attack air with tech upgrade.", "unitCount": 3, "isAirUnit": false, "targets": ["ground"], "range":100, "cost": 100 },
+                "Vulcan": { "category": ["giant", "ground", "ranged", "splash","chaff clear"], "descriptions": "giant, anti-swarm, fire, large spash, 95 range,target ground only, single unit, high hp", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":95, "cost": 400 },
+                "War Factory": { "category": ["titan", "ground", "ranged", "splash"<"chaff clear"], "descriptions": "titan, produces other units, high hp, expensive, 100 range, targets ground only, splash, slow, upkeep cost", "unitCount": 1, "isAirUnit": false, "targets": ["ground"], "range":100, "cost": 800 },
+                "Wasp": { "category": ["light", "air", "ranged","chaff"], "descriptions": "light, air, 12 units, 50 range, high speed, targets air and ground, low HP", "unitCount": 12, "isAirUnit": true, "targets": ["air", "ground"], "range":50, "cost": 200 },
+                "Wraith": { "category": ["heavy", "air", "ranged", "splash","chaff clear"], "descriptions": "heavy, air, single unit, 60 range, splash", "unitCount": 1, "isAirUnit": true, "targets": ["air", "ground"], "range":60, "cost": 300 }
             };
             
             // This is the correct counters data, replacing the previous duplicate.
@@ -155,7 +189,7 @@
                 "Abyss": { "weakness": ["Marksman", "Melting Point", "Mustang", "Wasp"], "strong_counter": ["Sledgehammer"], "synergizes":["Sledgehammer","Tarantula","Sabertooth"] },
                 "Arclight": { "weakness": ["Fortress", "Melting Point", "Overlord", "Rhino", "Scorpion", "Steel Ball", "Stormcaller", "Vulcan", "War Factory", "Hacker"], "strong_counter": ["Crawler", "Hounds", "Mustang", "Stormcaller"], "synergizes":[] },
                 "Crawler": { "weakness": ["Arclight", "Fire Badger", "Mustang", "Sledgehammer", "Vulcan", "Wraith"], "strong_counter": ["Hacker", "Marksman", "Melting Point", "Sabertooth", "Steel Ball", "Void Eye"], "synergizes":["Phantom Ray"] },
-                "Fang": { "weakness": ["Fire Badger", "Mustang", "Steel Ball", "Typhoon", "Vulcan", "Wraith"], "strong_counter": ["Fortress", "Marksman", "Mustang", "Phoenix", "Sabertooth", "Stormcaller", "Wasp"], "synergizes":["Typhoon","Marksman", "Sledgehammer","Fortress"] },
+                "Fang": { "weakness": ["Crawler","Fire Badger", "Mustang", "Steel Ball", "Typhoon", "Vulcan", "Wraith"], "strong_counter": ["Fortress", "Marksman", "Mustang", "Phoenix", "Sabertooth", "Stormcaller", "Wasp"], "synergizes":["Typhoon","Marksman", "Sledgehammer","Fortress"] },
                 "Farseer": { "weakness": ["Fortress", "Melting Point", "Rhino", "War Factory"], "strong_counter": ["Marksman", "Mustang", "Phantom Ray", "Phoenix", "Raiden", "Tarantula", "Hacker"], "synergizes":["Mustang"] },
                 "Fire Badger": { "weakness": ["Fortress", "Overlord", "Rhino", "Sabertooth", "War Factory", "Hacker"], "strong_counter": ["Crawler", "Fang", "Hounds"], "synergizes":[] },
                 "Fortress": { "weakness": ["Fang x3", "Melting Point", "Overlord", "Sandworm", "Steel Ball"], "strong_counter": ["Arclight", "Farseer", "Fire Badger", "Sabertooth", "Stormcaller", "Tarantula", "Typhoon", "Vulcan", "Rhino", "Hacker"], "synergizes":["Mustang","Fang"] },
@@ -182,7 +216,7 @@
                 "Vulcan": { "weakness": ["Fortress", "Melting Point", "Overlord", "Phoenix", "Steel Ball", "Rhino"], "strong_counter": ["Arclight", "Crawler", "Fang", "Hounds", "Mountain", "Sledgehammer", "Stormcaller", "Void Eye"], "synergizes":["Marksman"] },
                 "War Factory": { "weakness": ["Melting Point", "Overlord", "Scorpion"], "strong_counter": ["Arclight", "Farseer", "Fire Badger", "Hacker", "Marksman", "Rhino", "Sabertooth", "Sandworm", "Sledgehammer", "Tarantula", "Typhoon", "Rhino", "Hacker"], "synergizes":[] },
                 "Wasp": { "weakness": ["Fang", "Mustang", "Wraith"], "strong_counter": ["Abyss", "Mustang", "Overlord", "Phantom Ray", "Phoenix", "Scorpion"], "synergizes":[] },
-                "Wraith": { "weakness": ["Melting Point", "Overlord", "Phantom Ray", "Raiden", "Typhoon"], "strong_counter": ["Crawler", "Fang", "Phantom Ray", "Wasp"], "synergizes":[] }
+                "Wraith": { "weakness": ["Marksman","Melting Point", "Overlord", "Phantom Ray", "Raiden", "Typhoon"], "strong_counter": ["Crawler", "Fang", "Phantom Ray", "Wasp"], "synergizes":[] }
             };
             
             // This loop adds each unit to its own weakness array for complete counter logic.
@@ -403,206 +437,324 @@
                 enemyUnitsTitle.textContent = `Enemy Units: ${enemyUnitGroupsTotal}`;
             };
             
-            /**
-            /**
-             * Renders a list of counter recommendations based on the enemy units, sorted by effectiveness and cost.
-             */
-            const renderRecommendations = () => {
-                // Clear all lists at the beginning of the function
-                recommendationsList.innerHTML = ''; 
-                avoidUnitsList.innerHTML = '';
-                avoidPurchasingList.innerHTML = '';
-                const enemyUnitNames = Object.keys(enemyUnits);
+            /** Begin renderRecommendations function
+/**
+ * Renders a list of counter recommendations based on the enemy units, sorted by effectiveness and cost.
+ * This version uses more compact styling for better vertical space management and has corrected icon logic.
+ */
+const renderRecommendations = () => {
+    // Clear all recommendation lists
+    const recommendationsList = document.getElementById('recommendations-list');
+    const avoidUnitsList = document.getElementById('avoid-units-list');
+    const avoidPurchasingList = document.getElementById('avoid-purchasing-list');
 
-                if (enemyUnitNames.length === 0) {
-                    recommendationsList.innerHTML = '<li class="text-gray-400">Add enemy units to see counters.</li>';
-                    return;
-                }
+    recommendationsList.innerHTML = '';
+    avoidUnitsList.innerHTML = '';
+    avoidPurchasingList.innerHTML = '';
 
-                // Create a mutable copy of friendly units to allocate as counters
-                const friendlyUnitsToAllocate = { ...friendlyUnits };
+    const enemyUnitNames = Object.keys(enemyUnits);
 
-                enemyUnitNames.forEach(enemyUnitName => {
-                    const weaknesses = countersData[enemyUnitName]?.weakness || [];
+    if (enemyUnitNames.length === 0) {
+        recommendationsList.innerHTML = '<li class="text-gray-400 text-sm">Add enemy units to see counters.</li>';
+        avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">Add friendly units to see which to avoid.</li>';
+        avoidPurchasingList.innerHTML = '<li class="text-gray-400 text-sm">Add enemy units to see which to avoid purchasing.</li>';
+        return;
+    }
+
+    // --- Core Logic: Counter Calculation and Data Structuring ---
+    const recommendationsData = [];
+    // Create a mutable copy of friendly units to "spend" as counters
+    const friendlyUnitsToAllocate = { ...friendlyUnits };
+
+    enemyUnitNames.forEach(enemyUnitName => {
+        const enemyGroups = enemyUnits[enemyUnitName] || 0;
+        const weaknesses = countersData[enemyUnitName]?.weakness || [];
+        const enemyRange = mechData[enemyUnitName]?.range || 0;
+
+        let groupsCountered = 0;
+        const counteringUnits = {};
+
+        // An array to store all potential counters, including `x` modifiers
+        const potentialCounters = weaknesses.map(counter => {
+            const parts = counter.split(' x');
+            const unitName = parts[0].trim();
+            const count = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+            const cost = mechData[unitName]?.cost || Infinity;
+            const range = mechData[unitName]?.range || 0;
+            return { unitName, count, cost, range };
+        });
+
+        // Sort potential counters by number of friendly groups (descending) to use larger groups first
+        potentialCounters.sort((a, b) => (friendlyUnitsToAllocate[b.unitName] || 0) - (friendlyUnitsToAllocate[a.unitName] || 0));
+
+        // Allocate friendly units to counter this enemy unit, consuming them as they are used
+        for (const counter of potentialCounters) {
+            // Check if there are friendly units of this type available to allocate
+            const availableFriendlyUnits = friendlyUnitsToAllocate[counter.unitName] || 0;
+            if (availableFriendlyUnits > 0) {
+                // Calculate how many of this friendly unit are needed to counter one enemy group
+                const friendlyUnitsPerEnemy = counter.count;
+
+                // How many enemy groups can we counter with our available friendly units of this type?
+                const counterableGroups = Math.floor(availableFriendlyUnits / friendlyUnitsPerEnemy);
+
+                // How many enemy groups do we still need to counter?
+                const remainingEnemyGroups = enemyGroups - groupsCountered;
+
+                // Take the smaller of what we can counter and what we need to counter
+                const groupsToAllocate = Math.min(counterableGroups, remainingEnemyGroups);
+                
+                if (groupsToAllocate > 0) {
+                    groupsCountered += groupsToAllocate;
+                    const usedFriendlyUnits = groupsToAllocate * friendlyUnitsPerEnemy;
                     
-                    let friendlyCounterGroups = 0;
-                    const counteringUnits = {}; // Use an object to store counts
-                    
-                    // Find which friendly units are strong counters for this specific enemy unit
-                    const potentialCounters = weaknesses.filter(counter => friendlyUnitsToAllocate[counter] > 0);
-
-                    // Sort potential counters by number of groups (descending) to use larger groups first
-                    potentialCounters.sort((a, b) => friendlyUnitsToAllocate[b] - friendlyUnitsToAllocate[a]);
-
-                    // Allocate friendly units to counter this enemy unit, consuming them as they are used
-                    for (const counter of potentialCounters) {
-                        const groupsToAllocate = Math.min(friendlyUnitsToAllocate[counter], enemyUnits[enemyUnitName]);
-                        if (groupsToAllocate > 0) {
-                            friendlyCounterGroups += groupsToAllocate;
-                            counteringUnits[counter] = groupsToAllocate;
-                            friendlyUnitsToAllocate[counter] -= groupsToAllocate; // Reduce the available friendly units
-                        }
-                        if (friendlyCounterGroups >= enemyUnits[enemyUnitName]) {
-                            break; // Stop allocating once this enemy unit is fully countered
-                        }
-                    }
-
-                    const enemyGroups = enemyUnits[enemyUnitName] || 0;
-                    const isCountered = friendlyCounterGroups >= enemyGroups;
-                    
-                    const li = document.createElement('li');
-                    li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border');
-                    
-                    let statusText = '';
-                    let statusClass = '';
-
-                    if (isCountered) {
-                        statusText = 'Countered! ✅';
-                        statusClass = 'bg-green-700 border-green-500';
-                        // Build the message string for counters
-                        const counteringMessage = Object.keys(counteringUnits).map(unitName => {
-                            const quantity = counteringUnits[unitName];
-                            return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)}`;
-                        }).join(', ');
-                        
-                        const counterInfo = document.createElement('p');
-                        counterInfo.classList.add('text-sm', 'text-gray-300', 'mt-1');
-                        counterInfo.textContent = `Countered by: ${counteringMessage}`;
-                        li.appendChild(counterInfo);
+                    // Track how many friendly units were used to counter this enemy unit
+                    if (counteringUnits[counter.unitName]) {
+                        counteringUnits[counter.unitName] += usedFriendlyUnits;
                     } else {
-                        statusText = 'Needs Counters ❌';
-                        statusClass = 'bg-red-700 border-red-500';
-                        const neededGroups = enemyGroups - friendlyCounterGroups;
-                        
-                        // Only show recommendations for counters not already in friendly units
-                        const unownedCounters = weaknesses.filter(counter => !friendlyUnits[counter] || friendlyUnits[counter] === 0);
-                        unownedCounters.sort((a, b) => {
-                            const costA = mechData[a]?.cost || Infinity;
-                            const costB = mechData[b]?.cost || Infinity;
-                            return costA - costB;
-                        });
-                        
-                        // Display the required units to fully counter
-                        const counterList = document.createElement('ul');
-                        counterList.classList.add('list-disc', 'list-inside', 'text-gray-300', 'ml-4', 'mt-1');
-                        
-                        if (unownedCounters.length > 0) {
-                            const counterLi = document.createElement('li');
-                            counterLi.innerHTML = `You need **${neededGroups}** more counter groups. Consider purchasing:`;
-                            counterList.appendChild(counterLi);
-                            unownedCounters.forEach(counter => {
-                                const counterItemLi = document.createElement('li');
-                                const cost = mechData[counter]?.cost || 'N/A';
-                                counterItemLi.innerHTML = `${counter} (Cost: ${cost})`;
-                                counterList.appendChild(counterItemLi);
-                            });
-                        } else {
-                            const counterLi = document.createElement('li');
-                            counterLi.classList.add('text-gray-400', 'ml-4', 'italic', 'mt-1');
-                            counterLi.textContent = "You have the necessary units but need more groups.";
-                            counterList.appendChild(counterLi);
-                        }
-                        li.appendChild(counterList);
+                        counteringUnits[counter.unitName] = usedFriendlyUnits;
                     }
 
-                    li.innerHTML = `
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-white">${enemyUnitName.charAt(0).toUpperCase() + enemyUnitName.slice(1)} x${enemyGroups}</span>
-                            <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${statusClass}">${statusText}</span>
-                        </div>
-                        ${li.innerHTML}
-                    `;
-                    recommendationsList.appendChild(li);
+                    // Reduce the available friendly units
+                    friendlyUnitsToAllocate[counter.unitName] -= usedFriendlyUnits;
+                }
+            }
+
+            if (groupsCountered >= enemyGroups) {
+                break; // Stop allocating once this enemy unit is fully countered
+            }
+        }
+
+        const uncounteredGroups = enemyGroups - groupsCountered;
+        const isCountered = uncounteredGroups <= 0;
+
+        // If not fully countered, determine which units are needed
+        const neededUnits = [];
+        if (!isCountered) {
+            // Find all potential counters for this enemy unit
+            const allAvailableCounters = weaknesses.map(counter => {
+                const parts = counter.split(' x');
+                const unitName = parts[0].trim();
+                const count = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+                const cost = mechData[unitName]?.cost || Infinity;
+                const range = mechData[unitName]?.range || 0;
+                return { unitName, count, cost, range, enemyRange };
+            });
+
+            // Sort new counters to recommend by range and then cost
+            allAvailableCounters.sort((a, b) => {
+                const rangeA_advantage = a.range > a.enemyRange;
+                const rangeB_advantage = b.range > b.enemyRange;
+
+                if (rangeA_advantage && !rangeB_advantage) return -1;
+                if (!rangeA_advantage && rangeB_advantage) return 1;
+
+                if (a.range === 0 && b.range !== 0) return 1;
+                if (a.range !== 0 && b.range === 0) return -1;
+
+                return a.cost - b.cost;
+            });
+
+            allAvailableCounters.forEach(counter => {
+                neededUnits.push(counter);
+            });
+        }
+
+
+        recommendationsData.push({
+            enemyUnitName,
+            enemyGroups,
+            groupsCountered,
+            uncounteredGroups,
+            isCountered,
+            counteringUnits,
+            neededUnits,
+            enemyRange
+        });
+    });
+
+    // --- Sort the recommendations ---
+    // Uncountered units first, then fully countered units
+    recommendationsData.sort((a, b) => {
+        if (a.isCountered && !b.isCountered) return 1;
+        if (!a.isCountered && b.isCountered) return -1;
+        
+        // Secondary sort: for uncountered, show those with more uncountered groups first
+        if (!a.isCountered && !b.isCountered) {
+            return b.uncounteredGroups - a.uncounteredGroups;
+        }
+
+        // Tertiary sort: for countered, no specific order needed, but for consistency maybe by cost or alphabetical
+        return a.enemyUnitName.localeCompare(b.enemyUnitName);
+    });
+
+
+    // --- Render the sorted data to the UI ---
+    recommendationsData.forEach(item => {
+        const li = document.createElement('li');
+        // Compact styling: changed p-2 to p-1, mb-2 to mb-1
+        li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border');
+
+        let statusText = '';
+        let statusClass = '';
+
+        if (item.isCountered) {
+            statusText = 'Countered! ✅';
+            statusClass = 'bg-green-700 border-green-500';
+            const counteringMessage = Object.keys(item.counteringUnits).map(unitName => {
+                const quantity = item.counteringUnits[unitName];
+                const totalCost = quantity * (mechData[unitName]?.cost || 0);
+                return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)} ($${totalCost})`;
+            }).join(', ');
+            
+            li.innerHTML = `
+                <div class="flex justify-between items-center mb-0.5">
+                    <span class="text-sm text-white">${item.enemyUnitName.charAt(0).toUpperCase() + item.enemyUnitName.slice(1)} x${item.enemyGroups}</span>
+                    <span class="text-xs px-1 py-0.5 rounded-full ${statusClass}">${statusText}</span>
+                </div>
+                <p class="text-xs text-gray-300">Countered by: ${counteringMessage}</p>
+            `;
+        } else {
+            statusText = 'Needs Counters ❌';
+            statusClass = 'bg-red-700 border-red-500';
+
+            const neededUnitsHtml = item.neededUnits.map(unit => {
+                const requiredUnits = unit.count * item.uncounteredGroups;
+                const totalCost = requiredUnits * (mechData[unit.unitName]?.cost || 0);
+                const counterRange = mechData[unit.unitName]?.range || 0;
+                const enemyRange = mechData[item.enemyUnitName]?.range || 0;
+                let rangeIcon = '';
+
+                // Corrected logic for icons
+                if (counterRange > 0 && enemyRange === 0) {
+                    rangeIcon = '🎯'; // Ranged vs Melee
+                } else if (counterRange > 0 && enemyRange > 0) {
+                    if (counterRange > enemyRange) {
+                        rangeIcon = '⬆️'; // Longer Range
+                    } else if (counterRange < enemyRange) {
+                        rangeIcon = '⬇️'; // Shorter Range
+                    } else {
+                        rangeIcon = '↔️'; // Same Range
+                    }
+                } else if (counterRange === 0 && enemyRange > 0) {
+                    rangeIcon = '🔥'; // Melee vs Ranged
+                } else if (counterRange === 0 && enemyRange === 0) {
+                    rangeIcon = '⚔️'; // Melee vs Melee
+                }
+                
+                return `
+                    <li class="flex items-center space-x-1">
+                        <span class="text-xs">${unit.unitName.charAt(0).toUpperCase() + unit.unitName.slice(1)} x${requiredUnits} ($${totalCost})</span>
+                        <span class="text-sm">${rangeIcon}</span>
+                    </li>
+                `;
+            }).join('');
+
+            li.innerHTML = `
+                <div class="flex justify-between items-center mb-0.5">
+                    <span class="text-sm text-white">${item.enemyUnitName.charAt(0).toUpperCase() + item.enemyUnitName.slice(1)} x${item.enemyGroups}</span>
+                    <span class="text-xs px-1 py-0.5 rounded-full ${statusClass}">${statusText}</span>
+                </div>
+                <p class="text-xs text-gray-300">Needed to counter **${item.uncounteredGroups}** more groups:</p>
+                <ul class="mt-1 space-y-0.5">${neededUnitsHtml}</ul>
+            `;
+        }
+        recommendationsList.appendChild(li);
+    });
+
+    // --- "Units to Avoid" section ---
+    const friendlyUnitNames = Object.keys(friendlyUnits);
+
+    if (friendlyUnitNames.length === 0) {
+        avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">Add friendly units to see which to avoid.</li>';
+    } else {
+        const unitsToAvoid = {};
+        friendlyUnitNames.forEach(friendlyUnitName => {
+            const counteredByUnits = recommendations[friendlyUnitName]?.counteredBy || [];
+            const foundCounters = counteredByUnits.filter(counteredByName => enemyUnitNames.includes(`enemy ${counteredByName}`));
+            if (foundCounters.length > 0) {
+                unitsToAvoid[friendlyUnitName] = foundCounters;
+            }
+        });
+
+        if (Object.keys(unitsToAvoid).length === 0) {
+            avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">No friendly units are weak against enemy units.</li>';
+        } else {
+            const sortedUnitsToAvoid = Object.keys(unitsToAvoid).sort((a, b) => {
+                return unitsToAvoid[b].length - unitsToAvoid[a].length;
+            });
+            
+            const maxCounters = unitsToAvoid[sortedUnitsToAvoid[0]]?.length || 0;
+            const mostCounteredUnits = sortedUnitsToAvoid.filter(unit => unitsToAvoid[unit].length === maxCounters);
+
+            avoidUnitsList.innerHTML = '';
+            mostCounteredUnits.forEach(unitToAvoid => {
+                const li = document.createElement('li');
+                li.classList.add('p-0', 'rounded-md', 'mb-0', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+                const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
+                li.innerHTML = `<span class="text-sm text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
+                avoidUnitsList.appendChild(li);
+            });
+        }
+    }
+
+    // --- New section for "Units to Avoid Purchasing" ---
+    const allUnits = Object.keys(mechData);
+    const unitsToAvoidPurchasing = {};
+    if (enemyUnitNames.length > 0) {
+        allUnits.forEach(unitName => {
+            const unitWeaknesses = countersData[unitName]?.weakness || [];
+            Object.keys(enemyUnits).forEach(enemyUnitName => {
+                const isWeak = unitWeaknesses.some(weakness => {
+                    const parts = weakness.split(' x');
+                    return parts[0].trim() === enemyUnitName;
                 });
-
-                // --- "Units to Avoid" section ---
-                const friendlyUnitNames = Object.keys(friendlyUnits);
-
-                if (friendlyUnitNames.length === 0) {
-                    avoidUnitsList.innerHTML = '<li class="text-gray-400">Add friendly units to see which to avoid.</li>';
-                } else {
-                    const unitsToAvoid = {};
-                    friendlyUnitNames.forEach(friendlyUnitName => {
-                        Object.keys(enemyUnits).forEach(enemyUnitName => {
-                            const enemyWeaknesses = countersData[enemyUnitName]?.weakness || [];
-                            if (enemyWeaknesses.includes(friendlyUnitName)) {
-                                if (!unitsToAvoid[friendlyUnitName]) {
-                                    unitsToAvoid[friendlyUnitName] = [];
-                                }
-                                if (!unitsToAvoid[friendlyUnitName].includes(enemyUnitName)) {
-                                    unitsToAvoid[friendlyUnitName].push(enemyUnitName);
-                                }
-                            }
-                        });
-                    });
-                    if (Object.keys(unitsToAvoid).length === 0) {
-                        avoidUnitsList.innerHTML = '<li class="text-gray-400">No friendly units are weak against enemy units.</li>';
-                    } else {
-                        const sortedUnitsToAvoid = Object.keys(unitsToAvoid).sort((a, b) => {
-                            return unitsToAvoid[b].length - unitsToAvoid[a].length;
-                        });
-                        
-                        const maxCounters = unitsToAvoid[sortedUnitsToAvoid[0]].length;
-                        const mostCounteredUnits = sortedUnitsToAvoid.filter(unit => unitsToAvoid[unit].length === maxCounters);
-
-                        avoidUnitsList.innerHTML = '';
-                        mostCounteredUnits.forEach(unitToAvoid => {
-                            const li = document.createElement('li');
-                            li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
-                            const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
-                            li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
-                            avoidUnitsList.appendChild(li);
-                        });
+                if (isWeak) {
+                    if (!unitsToAvoidPurchasing[unitName]) {
+                        unitsToAvoidPurchasing[unitName] = [];
+                    }
+                    if (!unitsToAvoidPurchasing[unitName].includes(enemyUnitName)) {
+                        unitsToAvoidPurchasing[unitName].push(enemyUnitName);
                     }
                 }
+            });
+        });
+    }
 
-                // --- New section for "Units to Avoid Purchasing" ---
-                const allUnits = Object.keys(countersData);
-                // --- The "Units to Avoid" section checks your current friendly units and tells you which ones are
-                //  weak against the enemy's army. It's about vulnerability you already have on the board.
-                const unitsToAvoidPurchasing = {};
-                if (enemyUnitNames.length > 0) {
-                    allUnits.forEach(unitName => {
-                        const unitWeaknesses = countersData[unitName]?.weakness || [];
-                        Object.keys(enemyUnits).forEach(enemyUnitName => {
-                            if (unitWeaknesses.includes(enemyUnitName)) {
-                                if (!unitsToAvoidPurchasing[unitName]) {
-                                    unitsToAvoidPurchasing[unitName] = [];
-                                }
-                                if (!unitsToAvoidPurchasing[unitName].includes(enemyUnitName)) {
-                                    unitsToAvoidPurchasing[unitName].push(enemyUnitName);
-                                }
-                            }
-                        });
-                    });
-                }
-               
-                if (Object.keys(unitsToAvoidPurchasing).length === 0) {
-                    avoidPurchasingList.innerHTML = '<li class="text-gray-400">No units to avoid purchasing against this enemy composition.</li>';
-                } else {
-                    avoidPurchasingList.innerHTML = '';
-                    const sortedAvoidPurchasing = Object.keys(unitsToAvoidPurchasing).sort((a, b) => {
-                        const costA = mechData[a]?.cost || Infinity;
-                        const costB = mechData[b]?.cost || Infinity;
-                        return unitsToAvoidPurchasing[b].length - unitsToAvoidPurchasing[a].length;
-                    });
-                    
-                    sortedAvoidPurchasing.forEach(unitToAvoid => {
-                        const li = document.createElement('li');
-                        li.classList.add('p-2', 'rounded-md', 'mb-2', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
-                        const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
-                        li.innerHTML = `<span class="font-bold text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
-                        avoidPurchasingList.appendChild(li);
-                    });
-                }
-            };
-            //
-            // synergy recommendations function
-            // This function identifies and suggests synergy units that complement the current friendly units
-            // without being heavily countered by the enemy composition.
+    if (Object.keys(unitsToAvoidPurchasing).length === 0) {
+        avoidPurchasingList.innerHTML = '<li class="text-gray-400 text-sm">No units to avoid purchasing against this enemy composition.</li>';
+    } else {
+        const sortedAvoidPurchasing = Object.keys(unitsToAvoidPurchasing).sort((a, b) => {
+            const costA = mechData[a]?.cost || Infinity;
+            const costB = mechData[b]?.cost || Infinity;
+            return unitsToAvoidPurchasing[b].length - unitsToAvoidPurchasing[a].length;
+        });
+        
+        sortedAvoidPurchasing.forEach(unitToAvoid => {
+            const li = document.createElement('li');
+            // Compact styling: changed p-2 to p-1, mb-2 to mb-1
+            li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+            const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
+            li.innerHTML = `<span class="text-sm text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
+            avoidPurchasingList.appendChild(li);
+        });
+    }
+};
+
+
+            // end renderRecommendations function
+
+
+            /** Begin Synergy Recommendations function
+             * Renders a list of synergy recommendations, now with updated sorting logic.
+             * The list is sorted by:
+             * 1. Uncountered synergized units first.
+             * 2. Units that synergize with more friendly units (descending).
+             * 3. Least expensive units (ascending) in case of a tie.
+             */
             const renderSynergyRecommendations = () => {
                 // Clear any existing recommendations from the list
-                synergyRecommendationsList.innerHTML = ''; 
+                synergyRecommendationsList.innerHTML = '';
                 const friendlyUnitNames = Object.keys(friendlyUnits);
 
                 // If there are no friendly units, display the default message and exit.
@@ -615,84 +767,99 @@
 
                 // First Pass: Find all potential synergy units based on friendly units.
                 friendlyUnitNames.forEach(friendlyUnitName => {
-                    // SOLUTION: Use a case-insensitive lookup to find the correct key.
                     const dataKey = Object.keys(countersData).find(key => key.toLowerCase() === friendlyUnitName.toLowerCase());
-                    if (!dataKey) return; // If no match is found, skip this unit.
+                    if (!dataKey) return;
 
                     const synergies = countersData[dataKey]?.synergizes || [];
 
                     synergies.forEach(synergyUnitName => {
-                        // Initialize the recommendation object for a new synergy unit if it doesn't exist.
                         if (!recommendations[synergyUnitName]) {
                             recommendations[synergyUnitName] = {
                                 synergizingWith: [],
-                                isCountered: false
                             };
                         }
-                        // Add the current friendly unit to the list of units that synergize with this recommendation.
                         recommendations[synergyUnitName].synergizingWith.push(friendlyUnitName);
                     });
                 });
-                
+
                 // If no synergies were found after the first pass, display a message and exit.
                 if (Object.keys(recommendations).length === 0) {
                     synergyRecommendationsList.innerHTML = '<li class="text-gray-400">No synergy recommendations at this time.</li>';
                     return;
                 }
 
-                // Second Pass: Iterate through the compiled recommendations, check for enemy counters, and render the final list.
-                Object.keys(recommendations).forEach(synergyUnit => {
-                    const synergyData = recommendations[synergyUnit];
-                    
-                    // Check if this synergy unit is countered by any of the enemy units.
-                    // SOLUTION: Use a case-insensitive lookup here as well.
+                // Convert the recommendations object into an array for easier sorting
+                const synergyDataList = Object.keys(recommendations).map(synergyUnit => {
+                    const synergizingWith = recommendations[synergyUnit].synergizingWith;
                     const dataKey = Object.keys(countersData).find(key => key.toLowerCase() === synergyUnit.toLowerCase());
-                    if (!dataKey) return;
-                    
                     const enemyCounters = countersData[dataKey]?.weakness || [];
                     const isCountered = enemyCounters.some(counterUnit => {
-                        // This check now uses a case-insensitive comparison
                         return Object.keys(enemyUnits).some(enemyKey => enemyKey.toLowerCase() === counterUnit.toLowerCase());
                     });
-                    synergyData.isCountered = isCountered;
-                    
+                    const unitCost = mechData[synergyUnit]?.cost || Infinity;
+
+                    return {
+                        synergyUnit,
+                        synergizingWith,
+                        isCountered,
+                        unitCost
+                    };
+                });
+
+                // Sort the synergy recommendations based on the new logic
+                synergyDataList.sort((a, b) => {
+                    // Tier 1: Prioritize uncountered units (false comes before true)
+                    if (a.isCountered !== b.isCountered) {
+                        return a.isCountered ? 1 : -1;
+                    }
+
+                    // Tier 2: Units that synergize with more friendly units (descending)
+                    if (a.synergizingWith.length !== b.synergizingWith.length) {
+                        return b.synergizingWith.length - a.synergizingWith.length;
+                    }
+
+                    // Tier 3: Least expensive units (ascending)
+                    return a.unitCost - b.unitCost;
+                });
+
+                // Loop through the sorted array and render the recommendations
+                synergyDataList.forEach(unitData => {
+                    const { synergyUnit, synergizingWith, isCountered } = unitData;
+
                     const li = document.createElement('li');
-                    
                     let statusText = '';
                     let statusClass = '';
-                    if (synergyData.isCountered) {
-                         statusText = 'Caution ⚠️';
-                         statusClass = 'bg-yellow-700 text-yellow-200 border-yellow-500';
+
+                    if (isCountered) {
+                        statusText = 'Caution ⚠️';
+                        statusClass = 'bg-yellow-700 text-yellow-200 border-yellow-500';
                     } else {
-                        statusText = 'Strong Syngery ✅';
+                        statusText = 'Strong Synergy ✅';
                         statusClass = 'bg-purple-700 text-purple-200 border-purple-500';
                     }
 
                     li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border', ...statusClass.split(' '));
-                    const synergizingWith = synergyData.synergizingWith.map(unit => {
-                        // SOLUTION: This line now uses a case-insensitive lookup to get the correct friendly unit count.
+                    
+                    const synergizingWithText = synergizingWith.map(unit => {
                         const friendlyKey = Object.keys(friendlyUnits).find(key => key.toLowerCase() === unit.toLowerCase());
                         const friendlyCount = friendlyUnits[friendlyKey] || 0;
                         return `${friendlyKey.charAt(0).toUpperCase() + friendlyKey.slice(1)} x${friendlyCount}`;
                     }).join(', ');
-                    
-                    // Construct the inner HTML of the list item.
+
                     const synergyHtml = `
                         <div class="flex justify-between items-center mb-0">
-                            <span class="font-bold text-white">${synergyUnit.charAt(0).toUpperCase() + synergyUnit.slice(1)}</span>
-                            <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${statusClass}">${statusText}</span>
+                            <span class="text-white">${synergyUnit.charAt(0).toUpperCase() + synergyUnit.slice(1)}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full ${statusClass}">${statusText}</span>
                         </div>
-                        <p class="text-xs text-gray-300">Synergizes with: ${synergizingWith}</p>
+                        <p class="text-xs text-gray-300">Synergizes with: ${synergizingWithText}</p>
                     `;
 
                     li.innerHTML = synergyHtml;
-                    // Append the newly created and populated list item to the recommendations list.
                     synergyRecommendationsList.appendChild(li);
                 });
             };
-            //
-            // end of synergy function
-            //
+            /** End Synergy Recommendations function
+
             /**
              * Checks for and displays warnings related to aerial advantage.
              */
@@ -736,7 +903,7 @@
                     aerialWarning.classList.remove('hidden');
                 }
 
-                // The fix is here: The message is added to the statusMessage div, but only
+                // This message is added to the statusMessage div, but only
                 // if there are enemy units present.
                 if (Object.keys(enemyUnits).length > 0 && !enemyAntiAirUnits) {
                     statusMessage.innerHTML += ' <br><span class="text-yellow-400 text-xs">(Enemy has no anti-air, consider adding air units!)</span>';
