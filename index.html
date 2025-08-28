@@ -669,7 +669,7 @@ const renderRecommendations = () => {
                     <span class="text-sm text-white">${item.enemyUnitName.charAt(0).toUpperCase() + item.enemyUnitName.slice(1)} x${item.enemyGroups}</span>
                     <span class="text-xs px-1 py-0.5 rounded-full ${statusClass}">${statusText}</span>
                 </div>
-                <p class="text-xs text-gray-300">Needed to counter **${item.uncounteredGroups}** more groups:</p>
+                <p class="text-xs ...">Needed to counter <strong>${item.uncounteredGroups}</strong> more groups:</p>
                 <ul class="mt-1 space-y-0.5">${neededUnitsHtml}</ul>
             `;
         }
