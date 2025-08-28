@@ -1119,6 +1119,7 @@ const renderRecommendations = () => {
                 recognition.continuous = true;
                 recognition.interimResults = false;
                 recognition.lang = 'en-US';
+                let isManuallyStopped = false; //distinguish timeout from manual stop
 
                 // Event handler for when a command is recognized
                 recognition.onresult = (event) => {
@@ -1132,24 +1133,35 @@ const renderRecommendations = () => {
 
                 // Event handler for errors
                 recognition.onerror = (event) => {
+                    if (event.error === 'no-speech' || event.error === 'aborted') {
+                        console.error('No speech detected. Stopping voice recognition.');
+                    } else if (event.error === 'network') {
+                        console.error('Network error during recognition.');
+                    } else {
+                        showToast(`Voice error: ${event.error}`);
+                    }
+                    isListening = false;
+                    isManuallyStopped = true; // Ensure the restart is prevented
                     console.error('Speech recognition error:', event.error);
                     statusMessage.textContent = 'Error: ' + event.error;
+
                     stopVoiceRecognition();
                 };
 
                 // Event handler for when listening stops
                 recognition.onend = () => {
-                    if (isListening) {
+                    if (isListening && !isManuallyStopped) {
                         console.log('Restarting recognition...');
                         recognition.start();
                     } else {
-                        statusMessage.textContent = 'Stopped.';
+                        statusMessage.textContent = 'Stopped. (try humming to keep mic active)';
                         toggleButton.textContent = 'Start Listening';
                     }
                 };
 
                 recognition.start();
                 isListening = true;
+                isManuallyStopped = false;  //reset flag
                 statusMessage.textContent = 'Listening... ';
                 toggleButton.textContent = 'Stop Listening';
                 console.log('Voice recognition started.');
