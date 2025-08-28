@@ -944,8 +944,20 @@ const renderRecommendations = () => {
 
                 // This message is added to the statusMessage div, but only
                 // if there are enemy units present.
+				const hintId = 'no-aa-hint';
+				let hint = document.getElementById(hintId);
                 if (Object.keys(enemyUnits).length > 0 && !enemyAntiAirUnits) {
-                    statusMessage.innerHTML += ' <br><span class="text-yellow-400 text-xs">(Enemy has no anti-air, consider adding air units!)</span>';
+					if (!hint) {
+						hint = document.createElement('span');
+						hint.id = hintId;
+						hint.className = 'text-yellow-400 text-xs';
+						hint.textContent = ' (Enemy has no anti-air, consider adding air units!)';
+						statusMessage.appendChild(document.createElement('br'));
+						statusMessage.appendChild(hint);
+					}
+					else if (hint) {
+						hint.remove();
+					}
                 }
             };
             // end of aerial advantage function
