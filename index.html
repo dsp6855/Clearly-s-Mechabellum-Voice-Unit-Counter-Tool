@@ -439,11 +439,16 @@
             
             /** Begin renderRecommendations function
 /**
- * Renders a list of counter recommendations based on the enemy units, sorted by effectiveness and cost.
- * This version uses more compact styling for better vertical space management and has corrected icon logic.
+ * Renders all three recommendation lists:
+ * 1. Counter recommendations based on enemy units.
+ * 2. Friendly units to avoid due to enemy counters.
+ * 3. Units to avoid purchasing against the enemy composition.
+ *
+ * This function performs all necessary calculations and rendering in one place.
+ * It is a complete replacement for the previous `renderRecommendations` function.
  */
 const renderRecommendations = () => {
-    // Clear all recommendation lists
+    // Clear all recommendation lists to prevent duplicates on each call
     const recommendationsList = document.getElementById('recommendations-list');
     const avoidUnitsList = document.getElementById('avoid-units-list');
     const avoidPurchasingList = document.getElementById('avoid-purchasing-list');
@@ -454,6 +459,7 @@ const renderRecommendations = () => {
 
     const enemyUnitNames = Object.keys(enemyUnits);
 
+    // If there are no enemy units, display placeholder messages and exit
     if (enemyUnitNames.length === 0) {
         recommendationsList.innerHTML = '<li class="text-gray-400 text-sm">Add enemy units to see counters.</li>';
         avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">Add friendly units to see which to avoid.</li>';
@@ -465,6 +471,14 @@ const renderRecommendations = () => {
     const recommendationsData = [];
     // Create a mutable copy of friendly units to "spend" as counters
     const friendlyUnitsToAllocate = { ...friendlyUnits };
+    
+    // Log the contents of friendlyUnits before starting the main loop
+    console.log('Contents of friendlyUnits:', friendlyUnits);
+    
+    // Get the keys and log them
+    const friendlyUnitNamesToLog = Object.keys(friendlyUnits);
+    console.log('Contents of friendlyUnitNames:', friendlyUnitNamesToLog);
+
 
     enemyUnitNames.forEach(enemyUnitName => {
         const enemyGroups = enemyUnits[enemyUnitName] || 0;
@@ -662,20 +676,37 @@ const renderRecommendations = () => {
         recommendationsList.appendChild(li);
     });
 
-    // --- "Units to Avoid" section ---
+    // --- "Your Units Being Countered" section ---
     const friendlyUnitNames = Object.keys(friendlyUnits);
 
     if (friendlyUnitNames.length === 0) {
         avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">Add friendly units to see which to avoid.</li>';
     } else {
         const unitsToAvoid = {};
+        const lowerCaseEnemyUnitNames = Object.keys(enemyUnits).map(name => name.toLowerCase());
+
+        // Create a case-insensitive map of countersData for reliable lookup
+        const lowercaseCountersData = {};
+        Object.keys(countersData).forEach(key => {
+            lowercaseCountersData[key.toLowerCase()] = countersData[key];
+        });
+
         friendlyUnitNames.forEach(friendlyUnitName => {
-            const counteredByUnits = recommendations[friendlyUnitName]?.counteredBy || [];
-            const foundCounters = counteredByUnits.filter(counteredByName => enemyUnitNames.includes(`enemy ${counteredByName}`));
+            // FIX: Use the case-insensitive map for the lookup
+            const counteredByUnits = lowercaseCountersData[friendlyUnitName.toLowerCase()]?.weakness || [];
+            
+            // Log the contents of counteredByUnits for each friendly unit
+            console.log(`Contents of counteredByUnits for ${friendlyUnitName}:`, counteredByUnits);
+
+            // This part was already correct, ensuring case-insensitive comparison
+            const foundCounters = counteredByUnits.filter(counteredByName => lowerCaseEnemyUnitNames.includes(counteredByName.toLowerCase()));
             if (foundCounters.length > 0) {
                 unitsToAvoid[friendlyUnitName] = foundCounters;
             }
         });
+
+        // Log the contents of Object.keys(unitsToAvoid) after the loop
+        console.log('Contents of Object.keys(unitsToAvoid):', Object.keys(unitsToAvoid));
 
         if (Object.keys(unitsToAvoid).length === 0) {
             avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">No friendly units are weak against enemy units.</li>';
@@ -725,8 +756,6 @@ const renderRecommendations = () => {
         avoidPurchasingList.innerHTML = '<li class="text-gray-400 text-sm">No units to avoid purchasing against this enemy composition.</li>';
     } else {
         const sortedAvoidPurchasing = Object.keys(unitsToAvoidPurchasing).sort((a, b) => {
-            const costA = mechData[a]?.cost || Infinity;
-            const costB = mechData[b]?.cost || Infinity;
             return unitsToAvoidPurchasing[b].length - unitsToAvoidPurchasing[a].length;
         });
         
@@ -741,10 +770,9 @@ const renderRecommendations = () => {
     }
 };
 
-
             // end renderRecommendations function
 
-
+            /** Begin Synergy Recommendations function
             /** Begin Synergy Recommendations function
              * Renders a list of synergy recommendations, now with updated sorting logic.
              * The list is sorted by:
@@ -767,7 +795,10 @@ const renderRecommendations = () => {
 
                 // First Pass: Find all potential synergy units based on friendly units.
                 friendlyUnitNames.forEach(friendlyUnitName => {
-                    const dataKey = Object.keys(countersData).find(key => key.toLowerCase() === friendlyUnitName.toLowerCase());
+                    // Normalize the unit name to remove the " x#" suffix before lookup.
+                    const normalizedFriendlyUnitName = friendlyUnitName.toLowerCase().replace(/\s?x\d+$/, '');
+                    
+                    const dataKey = Object.keys(countersData).find(key => key.toLowerCase() === normalizedFriendlyUnitName.toLowerCase());
                     if (!dataKey) return;
 
                     const synergies = countersData[dataKey]?.synergizes || [];
@@ -778,7 +809,7 @@ const renderRecommendations = () => {
                                 synergizingWith: [],
                             };
                         }
-                        recommendations[synergyUnitName].synergizingWith.push(friendlyUnitName);
+                        recommendations[synergyUnitName].synergizingWith.push(normalizedFriendlyUnitName);
                     });
                 });
 
@@ -793,9 +824,18 @@ const renderRecommendations = () => {
                     const synergizingWith = recommendations[synergyUnit].synergizingWith;
                     const dataKey = Object.keys(countersData).find(key => key.toLowerCase() === synergyUnit.toLowerCase());
                     const enemyCounters = countersData[dataKey]?.weakness || [];
+                    
+                    // --- REVISED FIX START ---
+                    // Normalize the enemy unit key before checking for a counter to ensure accurate matching.
                     const isCountered = enemyCounters.some(counterUnit => {
-                        return Object.keys(enemyUnits).some(enemyKey => enemyKey.toLowerCase() === counterUnit.toLowerCase());
+                        return Object.keys(enemyUnits).some(enemyKey => {
+                            // Normalize both the enemyKey and the counterUnit for a reliable comparison.
+                            const normalizedEnemyKey = enemyKey.toLowerCase().replace(/\s?x\d+$/, '');
+                            return normalizedEnemyKey === counterUnit.toLowerCase();
+                        });
                     });
+                    // --- REVISED FIX END ---
+
                     const unitCost = mechData[synergyUnit]?.cost || Infinity;
 
                     return {
@@ -841,9 +881,8 @@ const renderRecommendations = () => {
                     li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border', ...statusClass.split(' '));
                     
                     const synergizingWithText = synergizingWith.map(unit => {
-                        const friendlyKey = Object.keys(friendlyUnits).find(key => key.toLowerCase() === unit.toLowerCase());
-                        const friendlyCount = friendlyUnits[friendlyKey] || 0;
-                        return `${friendlyKey.charAt(0).toUpperCase() + friendlyKey.slice(1)} x${friendlyCount}`;
+                        const friendlyKey = Object.keys(friendlyUnits).find(key => key.toLowerCase().replace(/\s?x\d+$/, '') === unit.toLowerCase());
+                        return `${friendlyKey.charAt(0).toUpperCase() + friendlyKey.slice(1)}`;
                     }).join(', ');
 
                     const synergyHtml = `
@@ -858,7 +897,7 @@ const renderRecommendations = () => {
                     synergyRecommendationsList.appendChild(li);
                 });
             };
-            /** End Synergy Recommendations function
+            // end Synergy Recommendations function
 
             /**
              * Checks for and displays warnings related to aerial advantage.
