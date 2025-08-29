@@ -262,11 +262,32 @@
                 'Farsiers': 'Farseer',
                 'Farsier': 'Farseer',
                 'fire badger': 'Fire Badger',
-                'five Sears': 'Farseer',
-                'farts here': 'Farseer',
-                'far sear': 'Farseer',
-                'fars here': 'Farseer',
-                'fortresses': 'Fortress',
+				'farseer': 'Farseer',
+				'far seer': 'Farseer',
+				'farsier': 'Farseer',
+				'far sear': 'Farseer',
+				'farceer': 'Farseer',
+				'pharseer': 'Farseer',
+				'phar seer': 'Farseer',
+				'farsi': 'Farseer',
+				'farseer unit': 'Farseer',
+				'five seers': 'Farseer',
+				'five sears': 'Farseer',
+				'farts here': 'Farseer',
+				'for sarah': 'Farseer',
+				'for Sierra': 'Farseer',
+				'for Sears': 'Farseer',
+				'for seer': 'Farseer',
+				'farsia': 'Farseer',
+				'fars here': 'Farseer', 
+				'forse here': 'Farseer',
+				'for seer': 'Farseer',
+				'for Sia': 'Farseer',
+				'for Sear': 'Farseer',
+				'for Syria': 'Farseer',
+				'foursier': 'Farseer',
+				'forse': 'Farseer',
+				'fortresses': 'Fortress',
 				'fortress': 'Fortress',
 				'fire badgers': 'Fire Badger',
                 'hackers': 'Hacker',
@@ -330,11 +351,90 @@
                 'wraiths': 'Wraith',
                 'wraths': 'Wraith'
             };
+			
+			const SYN = new Map(
+				Object.entries(nameMap).map(([k, v]) => [k.toLowerCase(), v])
+			);
+			
+			// Canonical unit names
+			const CANON = [
+			  "Abyss","Arclight","Crawler","Fang","Farseer","Fire Badger","Fortress","Hacker",
+			  "Hounds","Marksman","Melting Point","Mountain","Mustang","Overlord","Phantom Ray",
+			  "Phoenix","Raiden","Rhino","Sabertooth","Sandworm","Scorpion","Sledgehammer",
+			  "Steel Ball","Stormcaller","Tarantula","Typhoon","Void Eye","Vulcan","War Factory",
+			  "Wasp","Wraith"
+			];
 
             const friendlyTerms = ['friendly', 'friend', 'friends', 'our', 'ally', 'allied', 'my', 'me', 'us', 'team'];
             const enemyTerms = ['enemy', 'enemies', 'enemy\'s', 'foe', 'opponent', 'their', 'them', 'opposing', 'opponent\'s', 'opponents'];
-            const addTerms = ['ad', 'at', 'bad', 'had', 'i had', 'add', 'give']; //i had being two words is handled at processCommand function.
+            const addTerms = ['ad', 'at', 'bad', 'had', 'i had', 'add', 'give', 'and']; //i had being two words is handled at processCommand function.
             const removeTerms = ['remove', 'delete', 'subtract', 'minus', '-', 'take', 'less'];
+			// Normalizers + fuzzy match helpers
+			const norm = s => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+			const squash = s => norm(s).replace(/\s+/g, ''); // e.g. "far seer" → "farseer"
+
+			function levenshtein(a, b) {
+			  const dp = Array(b.length + 1).fill().map((_,i)=>[i]);
+			  for (let j=1;j<=a.length;j++) dp[0][j] = j;
+			  for (let i=1;i<=b.length;i++)
+				for (let j=1;j<=a.length;j++)
+				  dp[i][j] = b[i-1]===a[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+			  return dp[b.length][a.length];
+			}
+
+			function resolveUnit(words) {
+			  const toks = norm(words.join(' ')).split(/\s+/).filter(Boolean);
+
+			  // 1) Try 1..3-grams against SYN (synonyms)
+			  for (let n = 3; n >= 1; n--) {
+				for (let i = 0; i <= toks.length - n; i++) {
+				  const phrase = toks.slice(i, i + n).join(' ');
+				  if (STOP.has(phrase)) continue;
+				  const hit = SYN.get(phrase) || SYN.get(squash(phrase)) || SYN.get(phrase.replace(/s$/, ''));
+				  if (hit) return { unit: hit, method: 'synonym', dist: 0 };
+				}
+			  }
+
+			  // 2) Exact canonical (space/case-insensitive)
+			  for (let n = 3; n >= 1; n--) {
+				for (let i = 0; i <= toks.length - n; i++) {
+				  const phrase = toks.slice(i, i + n).join(' ');
+				  if (STOP.has(phrase)) continue;
+				  const pSq = squash(phrase);
+				  const exact = CANON.find(nm => squash(nm) === pSq);
+				  if (exact) return { unit: exact, method: 'exact', dist: 0 };
+				}
+			  }
+
+			  // 3) Fuzzy fallback with strict thresholds
+			  let best = null, bestDist = Infinity, bestLen = 0, bestN = 0;
+			  for (let n = 3; n >= 1; n--) {
+				for (let i = 0; i <= toks.length - n; i++) {
+				  const phrase = toks.slice(i, i + n).join(' ');
+				  if (STOP.has(phrase)) continue;
+				  const pSq = squash(phrase);
+				  if (pSq.length < 4) continue; // avoid tiny tokens like "thing"→"Fang"
+				  for (const name of CANON) {
+					const d = levenshtein(pSq, squash(name));
+					const L = Math.max(pSq.length, squash(name).length);
+					const ratio = d / L;
+					const ok = (L <= 5 ? d <= 1 : d <= 2) && ratio <= 0.34;
+					if (ok && (best === null || d < bestDist || (d === bestDist && (n > bestN || pSq.length > bestLen)))) {
+					  best = name; bestDist = d; bestLen = pSq.length; bestN = n;
+					}
+				  }
+				}
+			  }
+			  return best ? { unit: best, method: 'fuzzy', dist: bestDist } : { unit: null, method: 'none', dist: Infinity };
+			}
+			
+			const STOP = new Set([
+			  "add","ad","at","had","i","i had","give","remove","delete","subtract","minus","take","less",
+			  "enemy","enemies","friendly","friend","friends","our","ally","allied","my","me","us","team",
+			  "units","unit","group","groups","please","the","a","an","and","of","to","too","two","for","four"
+			]);
+
+			const SHORT_NAMES = new Set(["Fang","Wasp"]); // short names we never accept via fuzzy
 
             // --- STATE ---
             let friendlyUnits = {};
@@ -956,7 +1056,7 @@ const renderRecommendations = () => {
             /**
              * Processes a recognized voice command to add or remove a unit.
              */
-            const processCommand = (command) => {
+				const processCommand = (command, asrConfidence = 1) => {
                 // Convert the entire command to lowercase to handle case variations.
                 const commandLower = command.toLowerCase();
                 const commandWords = commandLower.split(' ');
@@ -977,7 +1077,7 @@ const renderRecommendations = () => {
                     checkAerialAdvantage();
                     statusMessage.textContent = 'Counters have been reset.';
                     console.log('Counters have been reset.');
-                    return;
+                    return true; // returning true so onresult stops here
                 }
 
                 // Update the last command display
@@ -1008,14 +1108,31 @@ const renderRecommendations = () => {
                 // Find the quantity and unit type
                 let wordsAfterAction = commandWords.slice(commandSplice);
                 
-                // Look for a number word or digit
-                const numberIndex = wordsAfterAction.findIndex(word => !isNaN(parseInt(word)) || numberWords[word]);
-                if (numberIndex !== -1) {
-                    const numberWord = wordsAfterAction[numberIndex];
-                    quantity = parseInt(numberWord) || numberWords[numberWord];
-                    // Remove the number from the array
-                    wordsAfterAction.splice(numberIndex, 1);
-                }
+				// Look for a number word or digit
+				let numberIndex = wordsAfterAction.findIndex(
+				  w => !isNaN(parseInt(w)) || numberWords[w]
+				);
+				if (numberIndex !== -1) {
+				  const numberWord   = wordsAfterAction[numberIndex];
+				  const numericValue = parseInt(numberWord) || numberWords[numberWord];
+
+				  // Avoid stealing ambiguous homophones when they form a known unit phrase
+				  const ambig = ['for','to','too'];
+				  const next1 = wordsAfterAction[numberIndex + 1] || '';
+				  const next2 = wordsAfterAction[numberIndex + 2] || '';
+				  const phrase2 = `${numberWord} ${next1}`.trim();
+				  const phrase3 = `${numberWord} ${next1} ${next2}`.trim();
+				  const clashesWithSyn =
+					ambig.includes(numberWord) &&
+					(SYN.has(phrase2) || SYN.has(squash(phrase2)) || SYN.has(phrase3) || SYN.has(squash(phrase3)));
+
+				  if (!clashesWithSyn) {
+					quantity = numericValue;
+					// Remove the number from the array
+					wordsAfterAction.splice(numberIndex, 1);
+				  }
+				}
+
 				// Check if the first word is "a" or "an" and remove it
 				if (wordsAfterAction.length > 0 && (wordsAfterAction[0] === 'a' || wordsAfterAction[0] === 'an')) {
 					wordsAfterAction.splice(0, 1);
@@ -1046,11 +1163,14 @@ const renderRecommendations = () => {
                 }
 
                 // The remaining words should form the unit name
-                unitName = wordsAfterAction.join(' ');
-                const mappedName = nameMap[unitName.toLowerCase()];
-                if (mappedName) {
-                    unitName = mappedName;
-                }
+				const { unit: resolvedUnit } = resolveUnit(wordsAfterAction);
+				if (resolvedUnit) {
+				  unitName = resolvedUnit;
+				} else {
+				  statusMessage.textContent += ' (unknown unit)';
+				  return false; // let onresult try another alternative
+				}
+
                 // Now, find the actual unit name from mechData using a case-insensitive search.
                 // We search through all the keys in mechData and find the one that matches our
                 // unitName regardless of case.
@@ -1059,7 +1179,7 @@ const renderRecommendations = () => {
                 // Now, we check if we found a match.
                 if (foundMechName) {
                     // If we found a match, use that key for all subsequent operations.
-                    // This preserves the original capitalization from your data.
+                    // This preserves the original capitalization from our data.
                     unitName = foundMechName;
                 } else {
                     // If no map entry, handle simple pluralization by removing 's'
@@ -1105,6 +1225,8 @@ const renderRecommendations = () => {
                 renderRecommendations();
                 renderSynergyRecommendations();
                 checkAerialAdvantage(); // Call this new function after processing the command
+				
+				return true; // tell onresult this command was handled successfully so we don't add units when we don't want to
             };
 
             /**
@@ -1122,17 +1244,19 @@ const renderRecommendations = () => {
                 recognition.continuous = true;
                 recognition.interimResults = false;
                 recognition.lang = 'en-US';
+				recognition.maxAlternatives = 5;
                 let isManuallyStopped = false; //distinguish timeout from manual stop
 
                 // Event handler for when a command is recognized
-                recognition.onresult = (event) => {
-                    for (let i = event.resultIndex; i < event.results.length; ++i) {
-                        const transcript = event.results[i][0].transcript.trim().toLowerCase();
-                        if (event.results[i].isFinal) {
-                            processCommand(transcript);
-                        }
-                    }
-                };
+				recognition.onresult = (e) => {
+				  for (let i = e.resultIndex; i < e.results.length; i++) {
+					if (!e.results[i].isFinal) continue;
+					const alts = Array.from(e.results[i]); // each alt has transcript + confidence
+					for (const alt of alts) {
+					  if (processCommand(alt.transcript.trim(), alt.confidence ?? 1)) break; // stop after first success
+					}
+				  }
+				};
 
                 // Event handler for errors
                 recognition.onerror = (event) => {
