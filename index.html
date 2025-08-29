@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.0b</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.0c</span>
         
 <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
         <p class="text-center text-gray-400 mb-4">Try saying "add three friendly crawlers" or "reset counters"</p>
@@ -131,6 +131,7 @@
     <div class="mt-8 text-center text-gray-400 text-xs">
         <p>&copy; 2025 Clearly Misunderstood  || 
         Code available on <a href="https://github.com/dsp6855/Clearly-s-Mechabellum-Voice-Unit-Counter-Tool/tree/main" class="text-indigo-400 hover:underline">GitHub</a></p>
+        <p>Special thanks to:  Rask Vann and knockoutpill for their contributions.</p>
 
     </div>
 
@@ -541,343 +542,341 @@
             };
             
             /** Begin renderRecommendations function
-/**
- * Renders all three recommendation lists:
- * 1. Counter recommendations based on enemy units.
- * 2. Friendly units to avoid due to enemy counters.
- * 3. Units to avoid purchasing against the enemy composition.
- *
- * This function performs all necessary calculations and rendering in one place.
- * It is a complete replacement for the previous `renderRecommendations` function.
- */
-const renderRecommendations = () => {
-    // Clear all recommendation lists to prevent duplicates on each call
-    const recommendationsList = document.getElementById('recommendations-list');
-    const avoidUnitsList = document.getElementById('avoid-units-list');
-    const avoidPurchasingList = document.getElementById('avoid-purchasing-list');
+            /**
+             * Renders all three recommendation lists:
+             * 1. Counter recommendations based on enemy units.
+             * 2. Friendly units to avoid due to enemy counters.
+             * 3. Units to avoid purchasing against the enemy composition.
+             *
+             * This function performs all necessary calculations and rendering in one place.
+             */
+            const renderRecommendations = () => {
+                // Clear all recommendation lists to prevent duplicates on each call
+                const recommendationsList = document.getElementById('recommendations-list');
+                const avoidUnitsList = document.getElementById('avoid-units-list');
+                const avoidPurchasingList = document.getElementById('avoid-purchasing-list');
 
-    recommendationsList.innerHTML = '';
-    avoidUnitsList.innerHTML = '';
-    avoidPurchasingList.innerHTML = '';
+                recommendationsList.innerHTML = '';
+                avoidUnitsList.innerHTML = '';
+                avoidPurchasingList.innerHTML = '';
 
-    const enemyUnitNames = Object.keys(enemyUnits);
+                const enemyUnitNames = Object.keys(enemyUnits);
 
-    // If there are no enemy units, display placeholder messages and exit
-    if (enemyUnitNames.length === 0) {
-        recommendationsList.innerHTML = '<li class="text-gray-400 text-sm">Add enemy units to see counters.</li>';
-        avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">Add friendly units to see which to avoid.</li>';
-        avoidPurchasingList.innerHTML = '<li class="text-gray-400 text-sm">Add enemy units to see which to avoid purchasing.</li>';
-        return;
-    }
+                // If there are no enemy units, display placeholder messages and exit
+                if (enemyUnitNames.length === 0) {
+                    recommendationsList.innerHTML = '<li class="text-gray-400 text-sm">Add enemy units to see counters.</li>';
+                    avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">Add friendly units to see which to avoid.</li>';
+                    avoidPurchasingList.innerHTML = '<li class="text-gray-400 text-sm">Add enemy units to see which to avoid purchasing.</li>';
+                    return;
+                }
 
-    // --- Core Logic: Counter Calculation and Data Structuring ---
-    const recommendationsData = [];
-    // Create a mutable copy of friendly units to "spend" as counters
-    const friendlyUnitsToAllocate = { ...friendlyUnits };
-    
-    // Log the contents of friendlyUnits before starting the main loop
-    console.log('Contents of friendlyUnits:', friendlyUnits);
-    
-    // Get the keys and log them
-    const friendlyUnitNamesToLog = Object.keys(friendlyUnits);
-    console.log('Contents of friendlyUnitNames:', friendlyUnitNamesToLog);
-
-
-    enemyUnitNames.forEach(enemyUnitName => {
-        const enemyGroups = enemyUnits[enemyUnitName] || 0;
-        const weaknesses = countersData[enemyUnitName]?.weakness || [];
-        const enemyRange = mechData[enemyUnitName]?.range || 0;
-
-        let groupsCountered = 0;
-        const counteringUnits = {};
-
-        // An array to store all potential counters, including `x` modifiers
-        const potentialCounters = weaknesses.map(counter => {
-            const parts = counter.split(' x');
-            const unitName = parts[0].trim();
-            const count = parts.length > 1 ? parseInt(parts[1], 10) : 1;
-            const cost = mechData[unitName]?.cost || Infinity;
-            const range = mechData[unitName]?.range || 0;
-            return { unitName, count, cost, range };
-        });
-
-        // Sort potential counters by number of friendly groups (descending) to use larger groups first
-        potentialCounters.sort((a, b) => (friendlyUnitsToAllocate[b.unitName] || 0) - (friendlyUnitsToAllocate[a.unitName] || 0));
-
-        // Allocate friendly units to counter this enemy unit, consuming them as they are used
-        for (const counter of potentialCounters) {
-            // Check if there are friendly units of this type available to allocate
-            const availableFriendlyUnits = friendlyUnitsToAllocate[counter.unitName] || 0;
-            if (availableFriendlyUnits > 0) {
-                // Calculate how many of this friendly unit are needed to counter one enemy group
-                const friendlyUnitsPerEnemy = counter.count;
-
-                // How many enemy groups can we counter with our available friendly units of this type?
-                const counterableGroups = Math.floor(availableFriendlyUnits / friendlyUnitsPerEnemy);
-
-                // How many enemy groups do we still need to counter?
-                const remainingEnemyGroups = enemyGroups - groupsCountered;
-
-                // Take the smaller of what we can counter and what we need to counter
-                const groupsToAllocate = Math.min(counterableGroups, remainingEnemyGroups);
+                // --- Core Logic: Counter Calculation and Data Structuring ---
+                const recommendationsData = [];
+                // Create a mutable copy of friendly units to "spend" as counters
+                const friendlyUnitsToAllocate = { ...friendlyUnits };
                 
-                if (groupsToAllocate > 0) {
-                    groupsCountered += groupsToAllocate;
-                    const usedFriendlyUnits = groupsToAllocate * friendlyUnitsPerEnemy;
-                    
-                    // Track how many friendly units were used to counter this enemy unit
-                    if (counteringUnits[counter.unitName]) {
-                        counteringUnits[counter.unitName] += usedFriendlyUnits;
-                    } else {
-                        counteringUnits[counter.unitName] = usedFriendlyUnits;
+                // Log the contents of friendlyUnits before starting the main loop
+                console.log('Contents of friendlyUnits:', friendlyUnits);
+                
+                // Get the keys and log them
+                const friendlyUnitNamesToLog = Object.keys(friendlyUnits);
+                console.log('Contents of friendlyUnitNames:', friendlyUnitNamesToLog);
+
+
+                enemyUnitNames.forEach(enemyUnitName => {
+                    const enemyGroups = enemyUnits[enemyUnitName] || 0;
+                    const weaknesses = countersData[enemyUnitName]?.weakness || [];
+                    const enemyRange = mechData[enemyUnitName]?.range || 0;
+
+                    let groupsCountered = 0;
+                    const counteringUnits = {};
+
+                    // An array to store all potential counters, including `x` modifiers
+                    const potentialCounters = weaknesses.map(counter => {
+                        const parts = counter.split(' x');
+                        const unitName = parts[0].trim();
+                        const count = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+                        const cost = mechData[unitName]?.cost || Infinity;
+                        const range = mechData[unitName]?.range || 0;
+                        return { unitName, count, cost, range };
+                    });
+
+                    // Sort potential counters by number of friendly groups (descending) to use larger groups first
+                    potentialCounters.sort((a, b) => (friendlyUnitsToAllocate[b.unitName] || 0) - (friendlyUnitsToAllocate[a.unitName] || 0));
+
+                    // Allocate friendly units to counter this enemy unit, consuming them as they are used
+                    for (const counter of potentialCounters) {
+                        // Check if there are friendly units of this type available to allocate
+                        const availableFriendlyUnits = friendlyUnitsToAllocate[counter.unitName] || 0;
+                        if (availableFriendlyUnits > 0) {
+                            // Calculate how many of this friendly unit are needed to counter one enemy group
+                            const friendlyUnitsPerEnemy = counter.count;
+
+                            // How many enemy groups can we counter with our available friendly units of this type?
+                            const counterableGroups = Math.floor(availableFriendlyUnits / friendlyUnitsPerEnemy);
+
+                            // How many enemy groups do we still need to counter?
+                            const remainingEnemyGroups = enemyGroups - groupsCountered;
+
+                            // Take the smaller of what we can counter and what we need to counter
+                            const groupsToAllocate = Math.min(counterableGroups, remainingEnemyGroups);
+                            
+                            if (groupsToAllocate > 0) {
+                                groupsCountered += groupsToAllocate;
+                                const usedFriendlyUnits = groupsToAllocate * friendlyUnitsPerEnemy;
+                                
+                                // Track how many friendly units were used to counter this enemy unit
+                                if (counteringUnits[counter.unitName]) {
+                                    counteringUnits[counter.unitName] += usedFriendlyUnits;
+                                } else {
+                                    counteringUnits[counter.unitName] = usedFriendlyUnits;
+                                }
+
+                                // Reduce the available friendly units
+                                friendlyUnitsToAllocate[counter.unitName] -= usedFriendlyUnits;
+                            }
+                        }
+
+                        if (groupsCountered >= enemyGroups) {
+                            break; // Stop allocating once this enemy unit is fully countered
+                        }
                     }
 
-                    // Reduce the available friendly units
-                    friendlyUnitsToAllocate[counter.unitName] -= usedFriendlyUnits;
-                }
-            }
+                    const uncounteredGroups = enemyGroups - groupsCountered;
+                    const isCountered = uncounteredGroups <= 0;
 
-            if (groupsCountered >= enemyGroups) {
-                break; // Stop allocating once this enemy unit is fully countered
-            }
-        }
+                    // If not fully countered, determine which units are needed
+                    const neededUnits = [];
+                    if (!isCountered) {
+                        // Find all potential counters for this enemy unit
+                        const allAvailableCounters = weaknesses.map(counter => {
+                            const parts = counter.split(' x');
+                            const unitName = parts[0].trim();
+                            const count = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+                            const cost = mechData[unitName]?.cost || Infinity;
+                            const range = mechData[unitName]?.range || 0;
+                            return { unitName, count, cost, range, enemyRange };
+                        });
 
-        const uncounteredGroups = enemyGroups - groupsCountered;
-        const isCountered = uncounteredGroups <= 0;
+                        // Sort new counters to recommend by range and then cost
+                        allAvailableCounters.sort((a, b) => {
+                            const rangeA_advantage = a.range > a.enemyRange;
+                            const rangeB_advantage = b.range > b.enemyRange;
 
-        // If not fully countered, determine which units are needed
-        const neededUnits = [];
-        if (!isCountered) {
-            // Find all potential counters for this enemy unit
-            const allAvailableCounters = weaknesses.map(counter => {
-                const parts = counter.split(' x');
-                const unitName = parts[0].trim();
-                const count = parts.length > 1 ? parseInt(parts[1], 10) : 1;
-                const cost = mechData[unitName]?.cost || Infinity;
-                const range = mechData[unitName]?.range || 0;
-                return { unitName, count, cost, range, enemyRange };
-            });
+                            if (rangeA_advantage && !rangeB_advantage) return -1;
+                            if (!rangeA_advantage && rangeB_advantage) return 1;
 
-            // Sort new counters to recommend by range and then cost
-            allAvailableCounters.sort((a, b) => {
-                const rangeA_advantage = a.range > a.enemyRange;
-                const rangeB_advantage = b.range > b.enemyRange;
+                            if (a.range === 0 && b.range !== 0) return 1;
+                            if (a.range !== 0 && b.range === 0) return -1;
 
-                if (rangeA_advantage && !rangeB_advantage) return -1;
-                if (!rangeA_advantage && rangeB_advantage) return 1;
+                            return a.cost - b.cost;
+                        });
 
-                if (a.range === 0 && b.range !== 0) return 1;
-                if (a.range !== 0 && b.range === 0) return -1;
-
-                return a.cost - b.cost;
-            });
-
-            allAvailableCounters.forEach(counter => {
-                neededUnits.push(counter);
-            });
-        }
-
-
-        recommendationsData.push({
-            enemyUnitName,
-            enemyGroups,
-            groupsCountered,
-            uncounteredGroups,
-            isCountered,
-            counteringUnits,
-            neededUnits,
-            enemyRange
-        });
-    });
-
-    // --- Sort the recommendations ---
-    // Uncountered units first, then fully countered units
-    recommendationsData.sort((a, b) => {
-        if (a.isCountered && !b.isCountered) return 1;
-        if (!a.isCountered && b.isCountered) return -1;
-        
-        // Secondary sort: for uncountered, show those with more uncountered groups first
-        if (!a.isCountered && !b.isCountered) {
-            return b.uncounteredGroups - a.uncounteredGroups;
-        }
-
-        // Tertiary sort: for countered, no specific order needed, but for consistency maybe by cost or alphabetical
-        return a.enemyUnitName.localeCompare(b.enemyUnitName);
-    });
-
-
-    // --- Render the sorted data to the UI ---
-    recommendationsData.forEach(item => {
-        const li = document.createElement('li');
-        // Compact styling: changed p-2 to p-1, mb-2 to mb-1
-        li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border');
-
-        let statusText = '';
-        let statusClass = '';
-
-        if (item.isCountered) {
-            statusText = 'Countered! ✅';
-            statusClass = 'bg-green-700 border-green-500';
-            const counteringMessage = Object.keys(item.counteringUnits).map(unitName => {
-                const quantity = item.counteringUnits[unitName];
-                const totalCost = quantity * (mechData[unitName]?.cost || 0);
-                return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)} ($${totalCost})`;
-            }).join(', ');
-            
-            li.innerHTML = `
-                <div class="flex justify-between items-center mb-0.5">
-                    <span class="text-sm text-white">${item.enemyUnitName.charAt(0).toUpperCase() + item.enemyUnitName.slice(1)} x${item.enemyGroups}</span>
-                    <span class="text-xs px-1 py-0.5 rounded-full ${statusClass}">${statusText}</span>
-                </div>
-                <p class="text-xs text-gray-300">Countered by: ${counteringMessage}</p>
-            `;
-        } else {
-            statusText = 'Needs Counters ❌';
-            statusClass = 'bg-red-700 border-red-500';
-
-            const neededUnitsHtml = item.neededUnits.map(unit => {
-                const requiredUnits = unit.count * item.uncounteredGroups;
-                const totalCost = requiredUnits * (mechData[unit.unitName]?.cost || 0);
-                const counterRange = mechData[unit.unitName]?.range || 0;
-                const enemyRange = mechData[item.enemyUnitName]?.range || 0;
-                let rangeIcon = '';
-
-                // Corrected logic for icons
-                if (counterRange > 0 && enemyRange === 0) {
-                    rangeIcon = '🎯'; // Ranged vs Melee
-                } else if (counterRange > 0 && enemyRange > 0) {
-                    if (counterRange > enemyRange) {
-                        rangeIcon = '⬆️'; // Longer Range
-                    } else if (counterRange < enemyRange) {
-                        rangeIcon = '⬇️'; // Shorter Range
-                    } else {
-                        rangeIcon = '↔️'; // Same Range
+                        allAvailableCounters.forEach(counter => {
+                            neededUnits.push(counter);
+                        });
                     }
-                } else if (counterRange === 0 && enemyRange > 0) {
-                    rangeIcon = '🔥'; // Melee vs Ranged
-                } else if (counterRange === 0 && enemyRange === 0) {
-                    rangeIcon = '⚔️'; // Melee vs Melee
-                }
-                
-                return `
-                    <li class="flex items-center space-x-1">
-                        <span class="text-xs">${unit.unitName.charAt(0).toUpperCase() + unit.unitName.slice(1)} x${requiredUnits} ($${totalCost})</span>
-                        <span class="text-sm">${rangeIcon}</span>
-                    </li>
-                `;
-            }).join('');
 
-            li.innerHTML = `
-                <div class="flex justify-between items-center mb-0.5">
-                    <span class="text-sm text-white">${item.enemyUnitName.charAt(0).toUpperCase() + item.enemyUnitName.slice(1)} x${item.enemyGroups}</span>
-                    <span class="text-xs px-1 py-0.5 rounded-full ${statusClass}">${statusText}</span>
-                </div>
-                <p class="text-xs text-gray-300">Needed to counter <strong>${item.uncounteredGroups}</strong> more groups:</p>
-                <ul class="mt-1 space-y-0.5">${neededUnitsHtml}</ul>
-            `;
-        }
-        recommendationsList.appendChild(li);
-    });
 
-    // --- "Your Units Being Countered" section ---
-    const friendlyUnitNames = Object.keys(friendlyUnits);
-
-    if (friendlyUnitNames.length === 0) {
-        avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">Add friendly units to see which to avoid.</li>';
-    } else {
-        const unitsToAvoid = {};
-        const lowerCaseEnemyUnitNames = Object.keys(enemyUnits).map(name => name.toLowerCase());
-
-        // Create a case-insensitive map of countersData for reliable lookup
-        const lowercaseCountersData = {};
-        Object.keys(countersData).forEach(key => {
-            lowercaseCountersData[key.toLowerCase()] = countersData[key];
-        });
-
-        friendlyUnitNames.forEach(friendlyUnitName => {
-            // FIX: Use the case-insensitive map for the lookup
-            const counteredByUnits = lowercaseCountersData[friendlyUnitName.toLowerCase()]?.weakness || [];
-            
-            // Log the contents of counteredByUnits for each friendly unit
-            console.log(`Contents of counteredByUnits for ${friendlyUnitName}:`, counteredByUnits);
-
-            // This part was already correct, ensuring case-insensitive comparison
-            const foundCounters = counteredByUnits.filter(counteredByName => lowerCaseEnemyUnitNames.includes(counteredByName.toLowerCase()));
-            if (foundCounters.length > 0) {
-                unitsToAvoid[friendlyUnitName] = foundCounters;
-            }
-        });
-
-        // Log the contents of Object.keys(unitsToAvoid) after the loop
-        console.log('Contents of Object.keys(unitsToAvoid):', Object.keys(unitsToAvoid));
-
-        if (Object.keys(unitsToAvoid).length === 0) {
-            avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">No friendly units are weak against enemy units.</li>';
-        } else {
-            const sortedUnitsToAvoid = Object.keys(unitsToAvoid).sort((a, b) => {
-                return unitsToAvoid[b].length - unitsToAvoid[a].length;
-            });
-            
-            const maxCounters = unitsToAvoid[sortedUnitsToAvoid[0]]?.length || 0;
-            const mostCounteredUnits = sortedUnitsToAvoid.filter(unit => unitsToAvoid[unit].length === maxCounters);
-
-            avoidUnitsList.innerHTML = '';
-            mostCounteredUnits.forEach(unitToAvoid => {
-                const li = document.createElement('li');
-                li.classList.add('p-0', 'rounded-md', 'mb-0', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
-                const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
-                li.innerHTML = `<span class="text-sm text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
-                avoidUnitsList.appendChild(li);
-            });
-        }
-    }
-
-    // --- New section for "Units to Avoid Purchasing" ---
-    const allUnits = Object.keys(mechData);
-    const unitsToAvoidPurchasing = {};
-    if (enemyUnitNames.length > 0) {
-        allUnits.forEach(unitName => {
-            const unitWeaknesses = countersData[unitName]?.weakness || [];
-            Object.keys(enemyUnits).forEach(enemyUnitName => {
-                const isWeak = unitWeaknesses.some(weakness => {
-                    const parts = weakness.split(' x');
-                    return parts[0].trim() === enemyUnitName;
+                    recommendationsData.push({
+                        enemyUnitName,
+                        enemyGroups,
+                        groupsCountered,
+                        uncounteredGroups,
+                        isCountered,
+                        counteringUnits,
+                        neededUnits,
+                        enemyRange
+                    });
                 });
-                if (isWeak) {
-                    if (!unitsToAvoidPurchasing[unitName]) {
-                        unitsToAvoidPurchasing[unitName] = [];
+
+                // --- Sort the recommendations ---
+                // Uncountered units first, then fully countered units
+                recommendationsData.sort((a, b) => {
+                    if (a.isCountered && !b.isCountered) return 1;
+                    if (!a.isCountered && b.isCountered) return -1;
+                    
+                    // Secondary sort: for uncountered, show those with more uncountered groups first
+                    if (!a.isCountered && !b.isCountered) {
+                        return b.uncounteredGroups - a.uncounteredGroups;
                     }
-                    if (!unitsToAvoidPurchasing[unitName].includes(enemyUnitName)) {
-                        unitsToAvoidPurchasing[unitName].push(enemyUnitName);
+
+                    // Tertiary sort: for countered, no specific order needed, but for consistency maybe by cost or alphabetical
+                    return a.enemyUnitName.localeCompare(b.enemyUnitName);
+                });
+
+
+                // --- Render the sorted data to the UI ---
+                recommendationsData.forEach(item => {
+                    const li = document.createElement('li');
+                    // Compact styling: changed p-2 to p-1, mb-2 to mb-1
+                    li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border');
+
+                    let statusText = '';
+                    let statusClass = '';
+
+                    if (item.isCountered) {
+                        statusText = 'Countered! ✅';
+                        statusClass = 'bg-green-700 border-green-500';
+                        const counteringMessage = Object.keys(item.counteringUnits).map(unitName => {
+                            const quantity = item.counteringUnits[unitName];
+                            const totalCost = quantity * (mechData[unitName]?.cost || 0);
+                            return `${quantity} ${unitName.charAt(0).toUpperCase() + unitName.slice(1)} ($${totalCost})`;
+                        }).join(', ');
+                        
+                        li.innerHTML = `
+                            <div class="flex justify-between items-center mb-0.5">
+                                <span class="text-sm text-white">${item.enemyUnitName.charAt(0).toUpperCase() + item.enemyUnitName.slice(1)} x${item.enemyGroups}</span>
+                                <span class="text-xs px-1 py-0.5 rounded-full ${statusClass}">${statusText}</span>
+                            </div>
+                            <p class="text-xs text-gray-300">Countered by: ${counteringMessage}</p>
+                        `;
+                    } else {
+                        statusText = 'Needs Counters ❌';
+                        statusClass = 'bg-red-700 border-red-500';
+
+                        const neededUnitsHtml = item.neededUnits.map(unit => {
+                            const requiredUnits = unit.count * item.uncounteredGroups;
+                            const totalCost = requiredUnits * (mechData[unit.unitName]?.cost || 0);
+                            const counterRange = mechData[unit.unitName]?.range || 0;
+                            const enemyRange = mechData[item.enemyUnitName]?.range || 0;
+                            let rangeIcon = '';
+
+                            // Corrected logic for icons
+                            if (counterRange > 0 && enemyRange === 0) {
+                                rangeIcon = '🎯'; // Ranged vs Melee
+                            } else if (counterRange > 0 && enemyRange > 0) {
+                                if (counterRange > enemyRange) {
+                                    rangeIcon = '⬆️'; // Longer Range
+                                } else if (counterRange < enemyRange) {
+                                    rangeIcon = '⬇️'; // Shorter Range
+                                } else {
+                                    rangeIcon = '↔️'; // Same Range
+                                }
+                            } else if (counterRange === 0 && enemyRange > 0) {
+                                rangeIcon = '🔥'; // Melee vs Ranged
+                            } else if (counterRange === 0 && enemyRange === 0) {
+                                rangeIcon = '⚔️'; // Melee vs Melee
+                            }
+                            
+                            return `
+                                <li class="flex items-center space-x-1">
+                                    <span class="text-xs">${unit.unitName.charAt(0).toUpperCase() + unit.unitName.slice(1)} x${requiredUnits} ($${totalCost})</span>
+                                    <span class="text-sm">${rangeIcon}</span>
+                                </li>
+                            `;
+                        }).join('');
+
+                        li.innerHTML = `
+                            <div class="flex justify-between items-center mb-0.5">
+                                <span class="text-sm text-white">${item.enemyUnitName.charAt(0).toUpperCase() + item.enemyUnitName.slice(1)} x${item.enemyGroups}</span>
+                                <span class="text-xs px-1 py-0.5 rounded-full ${statusClass}">${statusText}</span>
+                            </div>
+                            <p class="text-xs text-gray-300">Needed to counter <strong>${item.uncounteredGroups}</strong> more groups:</p>
+                            <ul class="mt-1 space-y-0.5">${neededUnitsHtml}</ul>
+                        `;
+                    }
+                    recommendationsList.appendChild(li);
+                });
+
+                // --- "Your Units Being Countered" section ---
+                const friendlyUnitNames = Object.keys(friendlyUnits);
+
+                if (friendlyUnitNames.length === 0) {
+                    avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">Add friendly units to see which to avoid.</li>';
+                } else {
+                    const unitsToAvoid = {};
+                    const lowerCaseEnemyUnitNames = Object.keys(enemyUnits).map(name => name.toLowerCase());
+
+                    // Create a case-insensitive map of countersData for reliable lookup
+                    const lowercaseCountersData = {};
+                    Object.keys(countersData).forEach(key => {
+                        lowercaseCountersData[key.toLowerCase()] = countersData[key];
+                    });
+
+                    friendlyUnitNames.forEach(friendlyUnitName => {
+                        // FIX: Use the case-insensitive map for the lookup
+                        const counteredByUnits = lowercaseCountersData[friendlyUnitName.toLowerCase()]?.weakness || [];
+                        
+                        // Log the contents of counteredByUnits for each friendly unit
+                        console.log(`Contents of counteredByUnits for ${friendlyUnitName}:`, counteredByUnits);
+
+                        // This part was already correct, ensuring case-insensitive comparison
+                        const foundCounters = counteredByUnits.filter(counteredByName => lowerCaseEnemyUnitNames.includes(counteredByName.toLowerCase()));
+                        if (foundCounters.length > 0) {
+                            unitsToAvoid[friendlyUnitName] = foundCounters;
+                        }
+                    });
+
+                    // Log the contents of Object.keys(unitsToAvoid) after the loop
+                    console.log('Contents of Object.keys(unitsToAvoid):', Object.keys(unitsToAvoid));
+
+                    if (Object.keys(unitsToAvoid).length === 0) {
+                        avoidUnitsList.innerHTML = '<li class="text-gray-400 text-sm">No friendly units are weak against enemy units.</li>';
+                    } else {
+                        const sortedUnitsToAvoid = Object.keys(unitsToAvoid).sort((a, b) => {
+                            return unitsToAvoid[b].length - unitsToAvoid[a].length;
+                        });
+                        
+                        const maxCounters = unitsToAvoid[sortedUnitsToAvoid[0]]?.length || 0;
+                        const mostCounteredUnits = sortedUnitsToAvoid.filter(unit => unitsToAvoid[unit].length === maxCounters);
+
+                        avoidUnitsList.innerHTML = '';
+                        mostCounteredUnits.forEach(unitToAvoid => {
+                            const li = document.createElement('li');
+                            li.classList.add('p-0', 'rounded-md', 'mb-0', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+                            const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
+                            li.innerHTML = `<span class="text-sm text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
+                            avoidUnitsList.appendChild(li);
+                        });
                     }
                 }
-            });
-        });
-    }
 
-    if (Object.keys(unitsToAvoidPurchasing).length === 0) {
-        avoidPurchasingList.innerHTML = '<li class="text-gray-400 text-sm">No units to avoid purchasing against this enemy composition.</li>';
-    } else {
-        const sortedAvoidPurchasing = Object.keys(unitsToAvoidPurchasing).sort((a, b) => {
-            return unitsToAvoidPurchasing[b].length - unitsToAvoidPurchasing[a].length;
-        });
-        
-        sortedAvoidPurchasing.forEach(unitToAvoid => {
-            const li = document.createElement('li');
-            // Compact styling: changed p-2 to p-1, mb-2 to mb-1
-            li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
-            const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
-            li.innerHTML = `<span class="text-sm text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
-            avoidPurchasingList.appendChild(li);
-        });
-    }
-};
+                // --- New section for "Units to Avoid Purchasing" ---
+                const allUnits = Object.keys(mechData);
+                const unitsToAvoidPurchasing = {};
+                if (enemyUnitNames.length > 0) {
+                    allUnits.forEach(unitName => {
+                        const unitWeaknesses = countersData[unitName]?.weakness || [];
+                        Object.keys(enemyUnits).forEach(enemyUnitName => {
+                            const isWeak = unitWeaknesses.some(weakness => {
+                                const parts = weakness.split(' x');
+                                return parts[0].trim() === enemyUnitName;
+                            });
+                            if (isWeak) {
+                                if (!unitsToAvoidPurchasing[unitName]) {
+                                    unitsToAvoidPurchasing[unitName] = [];
+                                }
+                                if (!unitsToAvoidPurchasing[unitName].includes(enemyUnitName)) {
+                                    unitsToAvoidPurchasing[unitName].push(enemyUnitName);
+                                }
+                            }
+                        });
+                    });
+                }
+
+                if (Object.keys(unitsToAvoidPurchasing).length === 0) {
+                    avoidPurchasingList.innerHTML = '<li class="text-gray-400 text-sm">No units to avoid purchasing against this enemy composition.</li>';
+                } else {
+                    const sortedAvoidPurchasing = Object.keys(unitsToAvoidPurchasing).sort((a, b) => {
+                        return unitsToAvoidPurchasing[b].length - unitsToAvoidPurchasing[a].length;
+                    });
+                    
+                    sortedAvoidPurchasing.forEach(unitToAvoid => {
+                        const li = document.createElement('li');
+                        // Compact styling: changed p-2 to p-1, mb-2 to mb-1
+                        li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+                        const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
+                        li.innerHTML = `<span class="text-sm text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
+                        avoidPurchasingList.appendChild(li);
+                    });
+                }
+            };
 
             // end renderRecommendations function
 
             /** Begin Synergy Recommendations function
-            /** Begin Synergy Recommendations function
-             * Renders a list of synergy recommendations, now with updated sorting logic.
+             * Renders a list of synergy recommendations.
              * The list is sorted by:
              * 1. Uncountered synergized units first.
              * 2. Units that synergize with more friendly units (descending).
@@ -927,9 +926,7 @@ const renderRecommendations = () => {
                     const synergizingWith = recommendations[synergyUnit].synergizingWith;
                     const dataKey = Object.keys(countersData).find(key => key.toLowerCase() === synergyUnit.toLowerCase());
                     const enemyCounters = countersData[dataKey]?.weakness || [];
-                    
-                    // --- REVISED FIX START ---
-                    // Normalize the enemy unit key before checking for a counter to ensure accurate matching.
+                   // Normalize the enemy unit key before checking for a counter to ensure accurate matching.
                     const isCountered = enemyCounters.some(counterUnit => {
                         return Object.keys(enemyUnits).some(enemyKey => {
                             // Normalize both the enemyKey and the counterUnit for a reliable comparison.
@@ -937,10 +934,8 @@ const renderRecommendations = () => {
                             return normalizedEnemyKey === counterUnit.toLowerCase();
                         });
                     });
-                    // --- REVISED FIX END ---
 
                     const unitCost = mechData[synergyUnit]?.cost || Infinity;
-
                     return {
                         synergyUnit,
                         synergizingWith,
