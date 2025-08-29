@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.0</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.0b</span>
         
 <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
         <p class="text-center text-gray-400 mb-4">Try saying "add three friendly crawlers" or "reset counters"</p>
@@ -188,17 +188,17 @@
             const countersData = {
                 "Abyss": { "weakness": ["Marksman", "Melting Point", "Mustang", "Wasp"], "strong_counter": ["Sledgehammer"], "synergizes":["Sledgehammer","Tarantula","Sabertooth"] },
                 "Arclight": { "weakness": ["Fortress", "Melting Point", "Overlord", "Rhino", "Scorpion", "Steel Ball", "Stormcaller", "Vulcan", "War Factory", "Hacker"], "strong_counter": ["Crawler", "Hounds", "Mustang", "Stormcaller"], "synergizes":[] },
-                "Crawler": { "weakness": ["Arclight", "Fire Badger", "Mustang", "Sledgehammer", "Vulcan", "Wraith"], "strong_counter": ["Hacker", "Marksman", "Melting Point", "Sabertooth", "Steel Ball", "Void Eye"], "synergizes":["Phantom Ray"] },
-                "Fang": { "weakness": ["Crawler","Fire Badger", "Mustang", "Steel Ball", "Typhoon", "Vulcan", "Wraith"], "strong_counter": ["Fortress", "Marksman", "Mustang", "Phoenix", "Sabertooth", "Stormcaller", "Wasp"], "synergizes":["Typhoon","Marksman", "Sledgehammer","Fortress"] },
+                "Crawler": { "weakness": ["Arclight", "Fire Badger", "Mustang", "Sledgehammer", "Vulcan", "Wraith", "Typhoon"], "strong_counter": ["Hacker", "Marksman", "Melting Point", "Sabertooth", "Steel Ball", "Void Eye"], "synergizes":["Phantom Ray"] },
+                "Fang": { "weakness": ["Crawler","Fire Badger", "Mustang", "Steel Ball", "Typhoon", "Vulcan", "Wraith"], "strong_counter": ["Fortress", "Marksman", "Phoenix", "Sabertooth", "Stormcaller", "Wasp"], "synergizes":["Typhoon","Marksman", "Sledgehammer","Fortress"] },
                 "Farseer": { "weakness": ["Fortress", "Melting Point", "Rhino", "War Factory"], "strong_counter": ["Marksman", "Mustang", "Phantom Ray", "Phoenix", "Raiden", "Tarantula", "Hacker"], "synergizes":["Mustang", "Mountain"] },
                 "Fire Badger": { "weakness": ["Fortress", "Overlord", "Rhino", "Sabertooth", "War Factory", "Hacker"], "strong_counter": ["Crawler", "Fang", "Hounds"], "synergizes":[] },
                 "Fortress": { "weakness": ["Fang x3", "Melting Point", "Overlord", "Sandworm", "Steel Ball"], "strong_counter": ["Arclight", "Farseer", "Fire Badger", "Sabertooth", "Stormcaller", "Tarantula", "Typhoon", "Vulcan", "Rhino", "Hacker"], "synergizes":["Mustang","Fang"] },
                 "Hacker": { "weakness": ["Crawler", "Marksman", "Mustang", "Scorpion", "Stormcaller", "Typhoon", "Sabertooth", "Farseer", "Fortress", "Melting Point", "Sandworm", "War Factory", "Mountain", "Phoenix", "Overlord"], "strong_counter": ["Fire Badger", "Arclight", "Steel Ball"], "synergizes":["Melting Point"] },
                 "Hounds": { "weakness": ["Arclight", "Fire Badger", "Melting Point", "Overlord", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Vulcan"], "strong_counter": [], "synergizes":[] },
-                "Marksman": { "weakness": ["Crawler", "Fang", "Farseer", "Mustang", "War Factory"], "strong_counter": ["Abyss", "Melting Point", "Phantom Ray", "Phoenix", "Raiden", "Stormcaller", "Tarantula", "Hacker"], "synergizes":["Vulcan","Tarantula","Sledgehammer","Fang"] },
+                "Marksman": { "weakness": ["Crawler", "Fang", "Farseer", "Mustang", "War Factory"], "strong_counter": ["Void Eye", "Abyss", "Melting Point", "Phantom Ray", "Phoenix", "Raiden", "Stormcaller", "Tarantula", "Hacker"], "synergizes":["Vulcan","Tarantula","Sledgehammer","Fang"] },
                 "Melting Point": { "weakness": ["Crawler", "Marksman", "Phoenix", "Steel Ball"], "strong_counter": ["Abyss", "Arclight", "Farseer", "Fortress", "Hounds", "Mountain", "Overlord", "Raiden", "Rhino", "Sabertooth", "Sandworm", "Tarantula", "Typhoon", "Void Eye", "Vulcan", "War Factory", "Wraith", "Hacker"], "synergizes":["Hacker"] },
                 "Mountain": { "weakness": ["Melting Point", "Overlord", "Scorpion", "Sledgehammer", "Stormcaller", "Tarantula", "Vulcan"], "strong_counter": ["Sandworm", "Rhino", "Hacker"], "synergizes":["Raiden"] },
-                "Mustang": { "weakness": ["Arclight", "Fang", "Farseer", "Overlord", "Phoenix", "Rhino", "Tarantula", "Wasp"], "strong_counter": ["Abyss", "Crawler", "Fang", "Marksman", "Overlord", "Phantom Ray", "Phoenix", "Stormcaller", "Wasp", "Hacker"], "synergizes":["Fortress","Scorpion","Farseer"] },
+                "Mustang": { "weakness": ["Arclight", "Farseer", "Overlord", "Rhino", "Tarantula", "Wasp"], "strong_counter": ["Abyss", "Crawler", "Fang", "Marksman", "Overlord", "Phantom Ray", "Phoenix", "Stormcaller", "Wasp", "Hacker"], "synergizes":["Fortress","Scorpion","Farseer"] },
                 "Overlord": { "weakness": ["Melting Point", "Mustang", "Phoenix", "Wasp"], "strong_counter": ["Arclight", "Fire Badger", "Fortress", "Hacker", "Hounds", "Mountain", "Mustang", "Raiden", "Rhino", "Scorpion", "Steel Ball", "Sledgehammer", "Stormcaller", "Tarantula", "Vulcan", "War Factory", "Wraith"], "synergizes":["Typhoon"] },
                 "Phantom Ray": { "weakness": ["Farseer", "Marksman", "Mustang", "Phoenix", "Raiden", "Typhoon", "Wasp", "Wraith"], "strong_counter": ["Wraith"], "synergizes":["Crawler"] },
                 "Phoenix": { "weakness": ["Fang", "Farseer", "Marksman", "Mustang", "Wasp"], "strong_counter": ["Hacker", "Melting Point", "Mustang", "Overlord", "Phantom Ray", "Raiden", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Typhoon", "Vulcan"], "synergizes":["Typhoon"] },
@@ -207,13 +207,13 @@
                 "Sabertooth": { "weakness": ["Crawler", "Fang", "Fortress", "Melting Point", "Steel Ball", "War Factory"], "strong_counter": ["Fire Badger", "Typhoon", "Rhino", "Hacker"], "synergizes":[] },
                 "Sandworm": { "weakness": ["Melting Point", "Mountain", "War Factory"], "strong_counter": ["Fortress", "Hacker"], "synergizes":["Mustang","Arc Light","Stormcaller","Phoenix"] },
                 "Scorpion": { "weakness": ["Overlord", "Phoenix", "Wasp"], "strong_counter": ["Arclight", "Hounds", "Mountain", "Typhoon", "Void Eye", "War Factory", "Rhino", "Hacker", "Vulcan"], "synergizes":["Mustang"] },
-                "Sledgehammer": { "weakness": ["Phoenix", "Vulcan", "War Factory", "Overlord", "Rhino", "Abyss"], "strong_counter": ["Crawler", "Hounds", "Mountain", "Void Eye"], "synergizes":["Marksman"] },
+                "Sledgehammer": { "weakness": ["Phoenix", "Vulcan", "War Factory", "Overlord", "Rhino", "Abyss"], "strong_counter": ["Crawler", "Hounds", "Mountain"], "synergizes":["Marksman"] },
                 "Steel Ball": { "weakness": ["Crawler", "Overlord", "Phoenix", "Hacker"], "strong_counter": ["Arclight", "Fang", "Fortress", "Hounds", "Melting Point", "Rhino", "Sabertooth", "Tarantula", "Typhoon", "Void Eye", "Vulcan"], "synergizes":["Crawler","Wraith","Mustang","Fire Badger", "Overlord","Fortress"] },
                 "Stormcaller": { "weakness": ["Arclight", "Fang", "Fortress", "Marksman", "Mustang", "Overlord", "Typhoon", "Vulcan"], "strong_counter": ["Arclight", "Hacker", "Mountain", "Tarantula"], "synergizes":[] },
                 "Tarantula": { "weakness": ["Farseer", "Fortress", "Marksman", "Melting Point", "Overlord", "Phoenix", "Steel Ball", "Stormcaller", "War Factory", "Rhino"], "strong_counter": ["Hounds", "Mountain", "Mustang", "Void Eye"], "synergizes":[] },
-                "Typhoon": { "weakness": ["Fortress", "Melting Point", "Phoenix", "Sabertooth", "Scorpion", "Steel Ball", "War Factory"], "strong_counter": ["Fang", "Phantom Ray", "Stormcaller", "Void Eye", "Wraith", "Hacker"], "synergizes":["Phoenix","Fang","Overlord"] },
-                "Void Eye": { "weakness": ["Crawler", "Melting Point", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Typhoon", "Vulcan"], "strong_counter": [], "synergizes":[] },
-                "Vulcan": { "weakness": ["Fortress", "Melting Point", "Overlord", "Phoenix", "Steel Ball", "Rhino", "Scorpion"], "strong_counter": ["Arclight", "Crawler", "Fang", "Hounds", "Mountain", "Sledgehammer", "Stormcaller", "Void Eye"], "synergizes":["Marksman"] },
+                "Typhoon": { "weakness": ["Fortress", "Melting Point", "Phoenix", "Sabertooth", "Scorpion", "Steel Ball", "War Factory"], "strong_counter": ["Fang", "Crawler", "Phantom Ray", "Stormcaller", "Void Eye", "Wraith", "Hacker"], "synergizes":["Phoenix","Fang","Overlord"] },
+                "Void Eye": { "weakness": ["Crawler", "Marksman", "Melting Point", "Rhino", "Scorpion", "Sledgehammer", "Steel Ball", "Tarantula", "Typhoon", "Vulcan"], "strong_counter": ["Hounds", "Fang"], "synergizes":[] },
+                "Vulcan": { "weakness": ["Fortress", "Melting Point", "Overlord", "Phoenix", "Steel Ball", "Rhino", "Scorpion", "Mountain"], "strong_counter": ["Arclight", "Crawler", "Fang", "Hounds", "Sledgehammer", "Stormcaller", "Void Eye"], "synergizes":["Marksman"] },
                 "War Factory": { "weakness": ["Melting Point", "Overlord", "Scorpion"], "strong_counter": ["Arclight", "Farseer", "Fire Badger", "Hacker", "Marksman", "Rhino", "Sabertooth", "Sandworm", "Sledgehammer", "Tarantula", "Typhoon", "Rhino", "Hacker"], "synergizes":[] },
                 "Wasp": { "weakness": ["Fang", "Mustang", "Wraith"], "strong_counter": ["Abyss", "Mustang", "Overlord", "Phantom Ray", "Phoenix", "Scorpion"], "synergizes":[] },
                 "Wraith": { "weakness": ["Marksman","Melting Point", "Overlord", "Phantom Ray", "Raiden", "Typhoon"], "strong_counter": ["Crawler", "Fang", "Phantom Ray", "Wasp"], "synergizes":[] }
@@ -669,7 +669,7 @@ const renderRecommendations = () => {
                     <span class="text-sm text-white">${item.enemyUnitName.charAt(0).toUpperCase() + item.enemyUnitName.slice(1)} x${item.enemyGroups}</span>
                     <span class="text-xs px-1 py-0.5 rounded-full ${statusClass}">${statusText}</span>
                 </div>
-                <p class="text-xs ...">Needed to counter <strong>${item.uncounteredGroups}</strong> more groups:</p>
+                <p class="text-xs text-gray-300">Needed to counter <strong>${item.uncounteredGroups}</strong> more groups:</p>
                 <ul class="mt-1 space-y-0.5">${neededUnitsHtml}</ul>
             `;
         }
