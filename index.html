@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.0c</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.1</span>
         
 <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
         <p class="text-center text-gray-400 mb-4">Try saying "add three friendly crawlers" or "reset counters"</p>
@@ -778,6 +778,81 @@
                     }
                     recommendationsList.appendChild(li);
                 });
+
+				// --- BEGIN: Wide Coverage (Yellow) using ALL enemy units ---
+                //Logic grabs entire enemy army and finds units that will counter them. Goal being to sort the list by units it finds with more than 2 counters found in the enemy army. Giving you a list of
+                //units that will be a good pick across several enemy units. Color codes the countered units, red for not countered, green for countered. So you can see what units cover holes in your army better.
+                //Notes units it finds that already exist and what units they're currently covering and the price.
+				const coverageByEnemy = {};
+				const coverageCost = {};
+				Object.keys(enemyUnits).forEach(enemyUnitName => {
+					// Get all possible counters for this enemy unit
+					const weaknesses = countersData[enemyUnitName]?.weakness || [];
+					weaknesses.forEach(counter => {
+						const parts = counter.split(' x');
+						const unitName = parts[0].trim();
+						coverageByEnemy[unitName] = coverageByEnemy[unitName] || new Set();
+						coverageByEnemy[unitName].add(enemyUnitName);
+						coverageCost[unitName] = mechData[unitName]?.cost || 0;
+					});
+				});
+				let wideCoverage = Object.entries(coverageByEnemy)
+					.filter(([unit, enemySet]) => enemySet.size >= 2)
+					.map(([unit, enemySet]) => ({
+						unit,
+						count: enemySet.size,
+						cost: coverageCost[unit],
+						enemies: Array.from(enemySet)
+					}))
+					.sort((a, b) => {
+						if (b.count !== a.count) return b.count - a.count;
+						if (a.cost !== b.cost) return a.cost - b.cost;
+						return a.unit.localeCompare(b.unit);
+					});
+
+				let wideCoverageHtml = '';
+				if (wideCoverage.length > 0) {
+					wideCoverageHtml = `<div class="mb-2">
+						<h3 class="text-yellow-300 text-xs font-bold mb-1" style="text-shadow: 0 2px 8px #000, 0 0px 2px #000;">Wide Coverage (counters multiple enemy units)</h3>
+						<ul class="space-y-1">` +
+						wideCoverage.map(obj => {
+							// Find all enemy units this unit is currently countering
+							const counteredEnemies = recommendationsData
+								.filter(item => item.isCountered && item.counteringUnits[obj.unit])
+								.map(item => item.enemyUnitName);
+
+							const isCountered = counteredEnemies.length > 0;
+							let counteredText = '';
+							if (isCountered) {
+								if (counteredEnemies.length === 1) {
+									counteredText = ` <span class="text-xs text-green-300">(countering: ${counteredEnemies[0]})</span>`;
+								} else {
+									counteredText = ` <span class="text-xs text-green-300">(countering: ${counteredEnemies.join(', ')})</span>`;
+								}
+							}
+
+							// Use a much darker yellow background and bright red for uncounteRED
+							return `<li class="rounded px-2 py-1 text-xs flex flex-col" style="background-color: #3a2e00;">
+								<span class="font-bold ${isCountered ? 'text-green-400' : 'text-white'}">
+									${obj.unit} <span class="font-normal">($${obj.cost})</span>
+									${counteredText}
+								</span>
+								<span>
+									Counters:
+									${obj.enemies.map(enemy =>
+										`<span class="${recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'text-green-400' : ''}" style="${!recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'color:#ff1744;font-weight:bold;' : ''}">
+											${enemy}
+										</span>`
+									).join(', ')}
+								</span>
+							</li>`;
+						}).join('') +
+						`</ul></div>`;
+				}
+
+				// Only insert Wide Coverage above the main recommendations list (Danger list removed)
+				recommendationsList.innerHTML = wideCoverageHtml + recommendationsList.innerHTML;
+				// --- END: Wide Coverage List ---
 
                 // --- "Your Units Being Countered" section ---
                 const friendlyUnitNames = Object.keys(friendlyUnits);
