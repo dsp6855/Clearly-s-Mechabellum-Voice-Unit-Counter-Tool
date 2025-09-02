@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-5xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.1a</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.1b</span>
         
 <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
         <p class="text-center text-gray-400 mb-4">Try saying "add three friendly crawlers" or "reset counters"</p>
@@ -62,8 +62,12 @@
             </div>
 
             <div id="wide-coverage-section" class="bg-yellow-900 p-1 rounded-lg shadow-inner mb-1">
-				<h2 class="text-large mb-1 text-yellow-300">Wide Coverage</h2>
-                <!-- Wide Coverage will be rendered here by JS -->
+            <!-- Wide Coverage will be rendered here by JS -->
+				<h2 class="text-large mb-1 text-yellow-300">Wide Coverage </h2>
+                <ul class="list-disc pl-5 space-y-1 flex-grow text-sm">
+                    <li class="'text-gray-400">Recommended friendly units to counter multiple enemy units.</li>
+                    <li>Add at least two types of enemy units to get recommendations.</li>
+                </ul>
             </div>
 
             <!-- Counter Recommendations Section -->
@@ -467,6 +471,7 @@
             const friendlyChaffClearCountSpan = document.getElementById('friendly-chaff-clear-count');
             const enemyChaffCountSpan = document.getElementById('enemy-chaff-count');
             const enemyChaffClearCountSpan = document.getElementById('enemy-chaff-clear-count');
+			const wideCoverageSection = document.getElementById('wide-coverage-section');
 
             // --- FUNCTIONS ---
             /**
@@ -815,11 +820,16 @@
 						return a.unit.localeCompare(b.unit);
 					});
 
-				let wideCoverageHtml = '';
+				//let wideCoverageHtml = '';
+                let wideCoverageHtml = `<div class="mb-0.5">
+                    	<h2 class="text-large mb-0 text-yellow-300">Wide Coverage </h2>
+                        <p class="text-xs text-center">(counters multiple enemy units)</p>
+                        <p class="text-xs text-center">
+                            <span style="color: #ff1744;">Red</span> = not countered,
+                            <span class="text-green-400">Green</span> = countered
+                        </p>`;
 				if (wideCoverage.length > 0) {
-					wideCoverageHtml = `<div class="mb-2">
-						<h3 class="text-yellow-300 text-xs font-bold mb-1" style="text-shadow: 0 2px 8px #000, 0 0px 2px #000;">Wide Coverage (counters multiple enemy units)</h3>
-						<ul class="space-y-1">` +
+					wideCoverageHtml += 
 						wideCoverage.map(obj => {
 							// Find all enemy units this unit is currently countering
 							const counteredEnemies = recommendationsData
@@ -837,7 +847,8 @@
 							}
 
 							// Use a much darker yellow background and bright red for uncounteRED
-							return `<li class="rounded px-2 py-1 text-xs flex flex-col" style="background-color: #3a2e00;">
+							//return `<li class="rounded px-2 py-1 text-xs flex flex-col" style="background-color: #3a2e00;">
+							return `<li class="rounded px-2 py-1 text-xs flex flex-col shadow-md" >
 								<span class="font-bold ${isCountered ? 'text-green-400' : 'text-white'}">
 									${obj.unit} <span class="font-normal">($${obj.cost})</span>
 									${counteredText}
@@ -845,7 +856,7 @@
 								<span>
 									Counters:
 									${obj.enemies.map(enemy =>
-										`<span class="${recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'text-green-400' : ''}" style="${!recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'color:#ff1744;font-weight:bold;' : ''}">
+										`<span class="${recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'text-green-400' : ''}" style="${!recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'color:#ff1744;' : ''}">
 											${enemy}
 										</span>`
 									).join(', ')}
@@ -854,9 +865,13 @@
 						}).join('') +
 						`</ul></div>`;
 				}
+                else {
+                    wideCoverageHtml += `<li class="text-gray-400 text-sm">No units provide wide coverage against multiple enemy units.</li></ul></div>`;
+                }
 
 				// Only insert Wide Coverage above the main recommendations list (Danger list removed)
-				const wideCoverageSection = document.getElementById('wide-coverage-section');
+				// Moved with other DOM units (around line 450)
+                // const wideCoverageSection = document.getElementById('wide-coverage-section');
                 wideCoverageSection.innerHTML = wideCoverageHtml;
 				// --- END: Wide Coverage List ---
 
