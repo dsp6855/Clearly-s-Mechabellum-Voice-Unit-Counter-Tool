@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-5xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.1b</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.1c</span>
         
 <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
         <p class="text-center text-gray-400 mb-4">Try saying "add three friendly crawlers" or "reset counters"</p>
@@ -66,7 +66,6 @@
 				<h2 class="text-large mb-1 text-yellow-300">Wide Coverage </h2>
                 <ul class="list-disc pl-5 space-y-1 flex-grow text-sm">
                     <li class="'text-gray-400">Recommended friendly units to counter multiple enemy units.</li>
-                    <li>Add at least two types of enemy units to get recommendations.</li>
                 </ul>
             </div>
 
@@ -793,78 +792,102 @@
                 //Logic grabs entire enemy army and finds units that will counter them. Goal being to sort the list by units it finds with more than 2 counters found in the enemy army. Giving you a list of
                 //units that will be a good pick across several enemy units. Color codes the countered units, red for not countered, green for countered. So you can see what units cover holes in your army better.
                 //Notes units it finds that already exist and what units they're currently covering and the price.
-				const coverageByEnemy = {};
-				const coverageCost = {};
-				Object.keys(enemyUnits).forEach(enemyUnitName => {
-					// Get all possible counters for this enemy unit
-					const weaknesses = countersData[enemyUnitName]?.weakness || [];
-					weaknesses.forEach(counter => {
-						const parts = counter.split(' x');
-						const unitName = parts[0].trim();
-						coverageByEnemy[unitName] = coverageByEnemy[unitName] || new Set();
-						coverageByEnemy[unitName].add(enemyUnitName);
-						coverageCost[unitName] = mechData[unitName]?.cost || 0;
-					});
-				});
-				let wideCoverage = Object.entries(coverageByEnemy)
-					.filter(([unit, enemySet]) => enemySet.size >= 2)
-					.map(([unit, enemySet]) => ({
-						unit,
-						count: enemySet.size,
-						cost: coverageCost[unit],
-						enemies: Array.from(enemySet)
-					}))
-					.sort((a, b) => {
-						if (b.count !== a.count) return b.count - a.count;
-						if (a.cost !== b.cost) return a.cost - b.cost;
-						return a.unit.localeCompare(b.unit);
-					});
+                const coverageByEnemy = {};
+                const coverageCost = {};
+                Object.keys(enemyUnits).forEach(enemyUnitName => {
+                    // Get all possible counters for this enemy unit
+                    const weaknesses = countersData[enemyUnitName]?.weakness || [];
+                    weaknesses.forEach(counter => {
+                        const parts = counter.split(' x');
+                        const unitName = parts[0].trim();
+                        coverageByEnemy[unitName] = coverageByEnemy[unitName] || new Set();
+                        coverageByEnemy[unitName].add(enemyUnitName);
+                        coverageCost[unitName] = mechData[unitName]?.cost || 0;
+                    });
+                });
+                let wideCoverage = Object.entries(coverageByEnemy)
+                    .filter(([unit, enemySet]) => enemySet.size >= 2)
+                    .map(([unit, enemySet]) => ({
+                        unit,
+                        count: enemySet.size,
+                        cost: coverageCost[unit],
+                        enemies: Array.from(enemySet)
+                    }))
+                    .sort((a, b) => {
+                        if (b.count !== a.count) return b.count - a.count;
+                        if (a.cost !== b.cost) return a.cost - b.cost;
+                        return a.unit.localeCompare(b.unit);
+                    });
 
-				//let wideCoverageHtml = '';
+                // --- BEGIN: Add single coverage for uncaptured enemy units ---
+                // I want the Wide Coverage list to be comprehensive, in that it has at least 1 option for each unit,
+                // so in the case where we can't find a buddy for a unit on the enemy team, we find it and 
+                // add the cheapest counter we can find for it.
+                // Find enemy units not covered by any wide coverage unit
+                const coveredEnemies = new Set();
+                wideCoverage.forEach(obj => obj.enemies.forEach(e => coveredEnemies.add(e)));
+                Object.keys(enemyUnits).forEach(enemyUnitName => {
+                    if (!coveredEnemies.has(enemyUnitName)) {
+                        // Find the cheapest counter for this enemy unit
+                        const weaknesses = countersData[enemyUnitName]?.weakness || [];
+                        let cheapest = null;
+                        weaknesses.forEach(counter => {
+                            const parts = counter.split(' x');
+                            const unitName = parts[0].trim();
+                            const cost = mechData[unitName]?.cost || Infinity;
+                            if (!cheapest || cost < cheapest.cost) {
+                                cheapest = { unit: unitName, count: 1, cost, enemies: [enemyUnitName] };
+                            }
+                        });
+                        if (cheapest) {
+                            wideCoverage.push(cheapest);
+                        }
+                    }
+                });
+                // --- END: Add single coverage for uncaptured enemy units ---
+
                 let wideCoverageHtml = `<div class="mb-0.5">
-                    	<h2 class="text-large mb-0 text-yellow-300">Wide Coverage </h2>
+                        <h2 class="text-large mb-0 text-yellow-300">Wide Coverage </h2>
                         <p class="text-xs text-center">(counters multiple enemy units)</p>
                         <p class="text-xs text-center">
                             <span style="color: #ff1744;">Red</span> = not countered,
                             <span class="text-green-400">Green</span> = countered
                         </p>`;
-				if (wideCoverage.length > 0) {
-					wideCoverageHtml += 
-						wideCoverage.map(obj => {
-							// Find all enemy units this unit is currently countering
-							const counteredEnemies = recommendationsData
-								.filter(item => item.isCountered && item.counteringUnits[obj.unit])
-								.map(item => item.enemyUnitName);
+                if (wideCoverage.length > 0) {
+                    wideCoverageHtml += 
+                        wideCoverage.map(obj => {
+                            // Find all enemy units this unit is currently countering
+                            const counteredEnemies = recommendationsData
+                                .filter(item => item.isCountered && item.counteringUnits[obj.unit])
+                                .map(item => item.enemyUnitName);
 
-							const isCountered = counteredEnemies.length > 0;
-							let counteredText = '';
-							if (isCountered) {
-								if (counteredEnemies.length === 1) {
-									counteredText = ` <span class="text-xs text-green-300">(countering: ${counteredEnemies[0]})</span>`;
-								} else {
-									counteredText = ` <span class="text-xs text-green-300">(countering: ${counteredEnemies.join(', ')})</span>`;
-								}
-							}
+                            const isCountered = counteredEnemies.length > 0;
+                            let counteredText = '';
+                            if (isCountered) {
+                                if (counteredEnemies.length === 1) {
+                                    counteredText = ` <span class="text-xs text-green-300">(countering: ${counteredEnemies[0]})</span>`;
+                                } else {
+                                    counteredText = ` <span class="text-xs text-green-300">(countering: ${counteredEnemies.join(', ')})</span>`;
+                                }
+                            }
 
-							// Use a much darker yellow background and bright red for uncounteRED
-							//return `<li class="rounded px-2 py-1 text-xs flex flex-col" style="background-color: #3a2e00;">
-							return `<li class="rounded px-2 py-1 text-xs flex flex-col shadow-md" >
-								<span class="font-bold ${isCountered ? 'text-green-400' : 'text-white'}">
-									${obj.unit} <span class="font-normal">($${obj.cost})</span>
-									${counteredText}
-								</span>
-								<span>
-									Counters:
-									${obj.enemies.map(enemy =>
-										`<span class="${recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'text-green-400' : ''}" style="${!recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'color:#ff1744;' : ''}">
-											${enemy}
-										</span>`
-									).join(', ')}
-								</span>
-							</li>`;
-						}).join('') +
-						`</ul></div>`;
-				}
+                            return `<li class="rounded px-2 py-1 text-xs flex flex-col shadow-md" >
+                                <span class="font-bold ${isCountered ? 'text-green-400' : 'text-white'}">
+                                    ${obj.unit} <span class="font-normal">($${obj.cost})</span>
+                                    ${counteredText}
+                                </span>
+                                <span>
+                                    Counters:
+                                    ${obj.enemies.map(enemy =>
+                                        `<span class="${recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'text-green-400' : ''}" style="${!recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'color:#ff1744;' : ''}">
+                                            ${enemy}
+                                        </span>`
+                                    ).join(', ')}
+                                </span>
+                            </li>`;
+                        }).join('') +
+                        `</ul></div>`;
+                }
                 else {
                     wideCoverageHtml += `<li class="text-gray-400 text-sm">No units provide wide coverage against multiple enemy units.</li></ul></div>`;
                 }
