@@ -19,7 +19,7 @@
     <!-- Main Container -->
     <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-2xl w-full relative">
         <!-- Version Number -->
-        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.1</span>
+        <span class="absolute top-4 right-4 text-xs text-gray-400">v4.1a</span>
         
 <h1 class="text-3xl font-bold text-center mb-4 text-sky-400">Clearly's Mechabellum Voice Unit Counter Tool</h1>
         <p class="text-center text-gray-400 mb-4">Try saying "add three friendly crawlers" or "reset counters"</p>
@@ -40,7 +40,7 @@
             <p id="status-message" class="text-gray-400 italic text-center mt-1 md:mt-0">Press the button to begin.</p>
         </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
             <div class="bg-red-700 p-1 rounded-lg shadow-inner flex flex-col text-white">
                 <h2 id="enemy-units-title" class="text-large mb-0 text-center">Enemy Units: 0</h2>
                 <div class="text-[10px] text-gray-400 mb-0 text-center">
@@ -59,6 +59,10 @@
                 <ul id="friendly-units-list" class="list-disc pl-5 space-y-1 flex-grow text-sm">
                     <li class="text-white">Add friendly units via voice.</li>
                 </ul>
+            </div>
+
+            <div id="wide-coverage-section" class="bg-yellow-900 p-1 rounded-lg shadow-inner mb-1">
+                <!-- Wide Coverage will be rendered here by JS -->
             </div>
 
             <!-- Counter Recommendations Section -->
@@ -851,7 +855,8 @@
 				}
 
 				// Only insert Wide Coverage above the main recommendations list (Danger list removed)
-				recommendationsList.innerHTML = wideCoverageHtml + recommendationsList.innerHTML;
+				const wideCoverageSection = document.getElementById('wide-coverage-section');
+                wideCoverageSection.innerHTML = wideCoverageHtml;
 				// --- END: Wide Coverage List ---
 
                 // --- "Your Units Being Countered" section ---
