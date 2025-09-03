@@ -1378,22 +1378,21 @@
 				  }
 				};
 
-                // Event handler for errors
                 recognition.onerror = (event) => {
-                    if (event.error === 'no-speech' || event.error === 'aborted') {
-                        console.error('No speech detected. Stopping voice recognition.');
-                    } else if (event.error === 'network') {
-                        console.error('Network error during recognition.');
-                    } else {
-                        showToast(`Voice error: ${event.error}`);
-                    }
-                    isListening = false;
-                    isManuallyStopped = true; // Ensure the restart is prevented
-                    console.error('Speech recognition error:', event.error);
-                    statusMessage.textContent = 'Error: ' + event.error;
-
-                    stopVoiceRecognition();
-                };
+                // You can keep your custom error logging and status message updates here.
+                if (event.error === 'no-speech' || event.error === 'aborted') {
+                    console.error('No speech detected. Stopping voice recognition.');
+                } else if (event.error === 'network') {
+                    console.error('Network error during recognition.');
+                } else {
+                    console.error(`Voice error: ${event.error}`);
+                }
+                
+                statusMessage.textContent = 'Error: ' + event.error;
+                
+                // Call the updated stop function, which now correctly handles the flags.
+                stopVoiceRecognition();
+            };
 
                 // Event handler for when listening stops
                 recognition.onend = () => {
@@ -1419,6 +1418,7 @@
              */
             const stopVoiceRecognition = () => {
                 if (recognition) {
+                    isManuallyStopped = true; // Prevent automatic restart
                     isListening = false;
                     recognition.stop();
                     console.log('Voice recognition stopped.');
