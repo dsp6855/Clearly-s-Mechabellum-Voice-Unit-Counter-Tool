@@ -854,8 +854,9 @@
                             <span class="text-green-400">Green</span> = countered
                         </p>`;
                 if (wideCoverage.length > 0) {
+                    // Limit to top 12 results for brevity (slice(0,12 is what does this)
                     wideCoverageHtml += 
-                        wideCoverage.map(obj => {
+                        wideCoverage.slice(0,12).map(obj => {
                             // Find all enemy units this unit is currently countering
                             const counteredEnemies = recommendationsData
                                 .filter(item => item.isCountered && item.counteringUnits[obj.unit])
@@ -865,21 +866,19 @@
                             let counteredText = '';
                             if (isCountered) {
                                 if (counteredEnemies.length === 1) {
-                                    counteredText = ` <span class="text-xs text-green-300">(countering: ${counteredEnemies[0]})</span>`;
+                                    counteredText = ` <span class="text-[9px] text-green-300">(countering: ${counteredEnemies[0]})</span>`;
                                 } else {
-                                    counteredText = ` <span class="text-xs text-green-300">(countering: ${counteredEnemies.join(', ')})</span>`;
+                                    counteredText = ` <span class="text-[9px] text-green-300">(countering: ${counteredEnemies.join(', ')})</span>`;
                                 }
                             }
 
-                            return `<li class="rounded px-2 py-1 text-xs flex flex-col shadow-md" >
+                            return `<li class="rounded px-2 py-1 text-[9px] flex flex-col shadow-md" >
                                 <span class="font-bold ${isCountered ? 'text-green-400' : 'text-white'}">
                                     ${obj.unit} <span class="font-normal">($${obj.cost})</span>
                                     ${counteredText}
-                                </span>
-                                <span>
                                     Counters:
                                     ${obj.enemies.map(enemy =>
-                                        `<span class="${recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'text-green-400' : ''}" style="${!recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'color:#ff1744;' : ''}">
+                                        `<span class="text-[8px] ${recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'text-green-400' : ''}" style="${!recommendationsData.find(r => r.enemyUnitName === enemy && r.isCountered) ? 'color:#ff1744;' : ''}">
                                             ${enemy}
                                         </span>`
                                     ).join(', ')}
@@ -945,7 +944,7 @@
                             const li = document.createElement('li');
                             li.classList.add('p-0', 'rounded-md', 'mb-0', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
                             const counteringUnits = unitsToAvoid[unitToAvoid].join(', ');
-                            li.innerHTML = `<span class="text-sm text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
+                            li.innerHTML = `<span class="text-[9px] text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
                             avoidUnitsList.appendChild(li);
                         });
                     }
@@ -984,9 +983,9 @@
                     sortedAvoidPurchasing.forEach(unitToAvoid => {
                         const li = document.createElement('li');
                         // Compact styling: changed p-2 to p-1, mb-2 to mb-1
-                        li.classList.add('p-1', 'rounded-md', 'mb-1', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
+                        li.classList.add('p-0', 'rounded-md', 'mb-0', 'shadow-sm', 'border', 'bg-red-700', 'border-red-500');
                         const counteringUnits = unitsToAvoidPurchasing[unitToAvoid].join(', ');
-                        li.innerHTML = `<span class="text-sm text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-xs px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
+                        li.innerHTML = `<span class="text-[9px] text-white">${unitToAvoid.charAt(0).toUpperCase() + unitToAvoid.slice(1)}</span><span class="text-[9px] px-1 py-0.5 rounded-full bg-red-800 text-white"> weak against: ${counteringUnits}</span>`;
                         avoidPurchasingList.appendChild(li);
                     });
                 }
