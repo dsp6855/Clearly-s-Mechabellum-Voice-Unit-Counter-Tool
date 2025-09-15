@@ -1396,6 +1396,8 @@
                 // Event handler for when listening stops
                 recognition.onend = () => {
                     if (isListening && !isManuallyStopped) {
+                        //console.log('Is Listening:  ', isListening);
+                        //console.log('Manually Stopped: ', isManuallyStopped);
                         console.log('Restarting recognition...');
                         recognition.start();
                     } else {
